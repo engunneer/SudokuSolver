@@ -1788,7 +1788,7 @@ public class Solver
                 if (numRunningTasks < maxRunningTasks)
                 {
                     numRunningTasks++;
-                    Task.Run(() => CountSolutionsMultiThreaded(solver, this));
+                    Task.Run(() => CountSolutionsMultiThreaded(solver, this), cancellationToken);
                     countdownEvent.AddCount();
                     return;
                 }

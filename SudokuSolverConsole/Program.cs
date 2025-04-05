@@ -470,9 +470,9 @@ public required int Port { get; init; }
 					Console.WriteLine("Sorting...");
 					file.Close();
 
-					string[] lines = await File.ReadAllLinesAsync(OutputPath);
+					string[] lines = await File.ReadAllLinesAsync(OutputPath, cancellationToken);
 					Array.Sort(lines);
-					await File.WriteAllLinesAsync(OutputPath, lines);
+					await File.WriteAllLinesAsync(OutputPath, lines, cancellationToken);
 					Console.WriteLine("Done.");
 				}
 			}
