@@ -31,7 +31,7 @@ public class MultiSumKillerCageConstraint : Constraint
         cells = cellGroups[0];
     }
 
-    public override string SpecificName => sums.Count != 0 ? $"Multisum Killer Cage {String.Join(',', sums)} at {CellName(cells[0])}" : $"Muiltisum Killer Cage at {CellName(cells[0])}";
+    public override string SpecificName => sums.Count != 0 ? $"Multisum Killer Cage {String.Join(',', sums)} at {CellName(cells[0])}" : $"Multisum Killer Cage at {CellName(cells[0])}";
 
     public override LogicResult InitCandidates(Solver sudokuSolver)
     {

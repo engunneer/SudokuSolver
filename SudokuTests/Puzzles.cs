@@ -1,4 +1,6 @@
-﻿namespace SudokuTests;
+﻿// ReSharper disable StringLiteralTypo
+// ReSharper disable RedundantVerbatimStringPrefix
+namespace SudokuTests;
 
 internal static class Puzzles
 {
@@ -303,7 +305,7 @@ internal static class Puzzles
             @"N4IgzglgXgpiBcBOANCA5gJwgEwQbT2AF9ljSSzKLryBdZQmq8l54+x1p7rjtn/nQaCR3PgIm9hk0UM6zR4rssW0iQA=",
             // Empty 8x8
             @"N4IgzglgXgpiBcAOANCA5gJwgEwQbT2AF9ljSSzKLqBdZQ68pq5ouh1zl497xv8r37CubegIm1xIyYOmiFPGkSA=",
-            // Puzzle doesn't inherit a puzzle with different dimentions
+            // Puzzle doesn't inherit a puzzle with different dimensions
             false
         ),
         (
@@ -497,7 +499,7 @@ internal static class Puzzles
             "duplicate the same constraint",
             // A puzzle with a renban
             @"N4IgzglgXgpiBcA2ANCA5gJwgEwQbT2AF9ljSSzKiBdZQih8p42+5xq1q99rj/8nx7cWtEBhgA7AEYBDSflAAbCJJhh8eEACUALAGEAzCFTbD+3SZ0AmfQFYQ1ajVQq1ikG/WadB46fNLU1sHJ1QAewBXABcvfQQQAGIAMQAGRAB2NKsAdxxogAsEVIA6XVQAMwxwgFt9cMkwaIxZVWiE7Sk5BRoiIA=",
-            // Add the same renban to the puzzle above one more time (so that the contraint is duplicated)
+            // Add the same renban to the puzzle above one more time (so that the constraint is duplicated)
             @"N4IgzglgXgpiBcA2ANCA5gJwgEwQbT2AF9ljSSzKiBdZQih8p42+5xq1q99rj/8nx7cWtEBhgA7AEYBDSflAAbCJJhh8eEACUALAGEAzCFTbD+3SZ0AmfQFYQ1ahRAq1G+AR0Hjp85dNbBycaVDc4T2VVdU1vIyszCwSgxzEAewBXABdw/QQQAGIAMQAGRAB2UqsAdxwsgAsEEoA6XVQAMww0gFt9NMkwLIxZVSz87Sk5BRdwjy89eL8kwPtU1Eyc6Lz4QtKKqtRa7Aam1o6u3v7B4dHxyfkQGiIgA==",
             // Duplicating constraints doesn't affect the solution
             true

@@ -445,7 +445,7 @@ namespace SudokuSolver
                         }
                         cells.Append(';');
 
-                        // The first cell specified is the one the line origintates from
+                        // The first cell specified is the one the line originates from
                         foreach (string cell in lines.Skip(1))
                         {
                             cells.Append(cell);

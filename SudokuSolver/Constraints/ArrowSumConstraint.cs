@@ -305,7 +305,7 @@ public class ArrowSumConstraint : Constraint
             // Valid circle arrangement works for all circle cell counts.
             foreach (var arrangement in ValidCircleArrangements(sudokuSolver, sum))
             {
-                // arrangement is now set to a plausable arrangement of cell values for this sum
+                // arrangement is now set to a plausible arrangement of cell values for this sum
 
                 for (var cellIndex = 0; cellIndex < circleCells.Count; cellIndex++)
                 {

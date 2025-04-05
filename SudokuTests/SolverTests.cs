@@ -48,7 +48,7 @@ public class SolverTests
                 }
             }
 
-        do_test:
+            do_test:
             Solver solver = SolverFactory.CreateFromGivens(givens.ToString());
             solver.TestInvalidSolution();
         }

@@ -1,6 +1,6 @@
 ﻿namespace SudokuTests;
 
-static internal class TestUtility
+internal static class TestUtility
 {
     public static string ToGivenString(this Solver solver)
     {

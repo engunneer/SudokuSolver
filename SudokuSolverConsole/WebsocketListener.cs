@@ -214,8 +214,8 @@ class WebsocketListener : IDisposable
                 }
                 catch (OperationCanceledException)
                 {
-                        // Do nothing, no response expected
-                    }
+                    // Do nothing, no response expected
+                }
                 catch (Exception e)
                 {
                     if (verboseLogs)

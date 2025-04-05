@@ -23,7 +23,7 @@ public abstract class OrthogonalValueConstraint : Constraint
 
     /// <summary>
     /// Allows other constraints to override the negative constraint of this constraint.
-    /// For exmaple: nonconsecutive "white" dots override the ratio "black" dot negative constraint,
+    /// For example: nonconsecutive "white" dots override the ratio "black" dot negative constraint,
     /// and vice versa, since they are both kropki dots.
     /// </summary>
     /// <param name="solver"></param>
@@ -213,7 +213,7 @@ public abstract class OrthogonalValueConstraint : Constraint
             uint cellMask0 = board[i0, j0] & ~valueSetMask;
             uint cellMask1 = board[i1, j1] & ~valueSetMask;
 
-            // Find which values are compatable between these masks
+            // Find which values are compatible between these masks
             for (int v = 1; v <= MAX_VALUE; v++)
             {
                 uint valueMask = ValueMask(v);

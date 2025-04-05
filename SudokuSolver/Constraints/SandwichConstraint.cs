@@ -421,13 +421,13 @@ public class SandwichConstraint : Constraint
                                         continue;
                                     }
 
-                                    foreach (var permuatation in combination.Permuatations())
+                                    foreach (var permutation in combination.Permuatations())
                                     {
-                                        if (sudokuSolver.CanPlaceDigits(unsetCells, permuatation))
+                                        if (sudokuSolver.CanPlaceDigits(unsetCells, permutation))
                                         {
                                             for (int cellIndex = 0; cellIndex < numUnsetCells; cellIndex++)
                                             {
-                                                keepMasks[unsetCellIndices[cellIndex]] |= ValueMask(permuatation[cellIndex]);
+                                                keepMasks[unsetCellIndices[cellIndex]] |= ValueMask(permutation[cellIndex]);
                                             }
                                             haveValidPlacement = true;
                                         }
@@ -546,13 +546,13 @@ public class SandwichConstraint : Constraint
                                         continue;
                                     }
 
-                                    foreach (var permuatation in combination.Permuatations())
+                                    foreach (var permutation in combination.Permuatations())
                                     {
-                                        if (sudokuSolver.CanPlaceDigits(unsetCells, permuatation))
+                                        if (sudokuSolver.CanPlaceDigits(unsetCells, permutation))
                                         {
                                             for (int cellIndex = 0; cellIndex < numUnsetCells; cellIndex++)
                                             {
-                                                keepMasks[unsetCellIndices[cellIndex]] |= ValueMask(permuatation[cellIndex]);
+                                                keepMasks[unsetCellIndices[cellIndex]] |= ValueMask(permutation[cellIndex]);
                                             }
                                             haveValidPlacement = true;
                                         }

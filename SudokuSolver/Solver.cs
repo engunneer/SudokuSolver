@@ -667,7 +667,7 @@ public class Solver
         // Create an initial seen map based on the standard groups only
         InitSeenMap();
 
-        // Do a single pass on intializing constraints.
+        // Do a single pass on initializing constraints.
         foreach (var constraint in constraints)
         {
             LogicResult result = constraint.InitCandidates(this);
@@ -3429,11 +3429,11 @@ public class Solver
 
                                 if (elims != null)
                                 {
-                                    // Calcuate the eliminations from individual candidates not in the fish
-                                    uint notPostionMask = tupleMask & ~positionMask;
+                                    // Calculate the eliminations from individual candidates not in the fish
+                                    uint notPositionMask = tupleMask & ~positionMask;
                                     foreach (int j in tupleRowOrCols)
                                     {
-                                        uint mask = indexByValue[valueIndex, j] & notPostionMask;
+                                        uint mask = indexByValue[valueIndex, j] & notPositionMask;
                                         if (mask != 0)
                                         {
                                             for (int i = 0; i < MAX_VALUE; i++)
@@ -3576,7 +3576,7 @@ public class Solver
                         }
                         else
                         {
-                            // Pivot is 2, elimiate from the shared 01 value
+                            // Pivot is 2, eliminate from the shared 01 value
                             elims = CalcElims(cand01_0, cand01_1).ToList();
                         }
                         if (elims.Count > 0)
@@ -4382,7 +4382,7 @@ public class Solver
                     desc: $"Setting {CellName(contradiction.I, contradiction.J)} to {contradiction.V} causes a contradiction:",
                     sourceCandidates: Enumerable.Empty<int>(),
                     elimCandidates: CandidateIndex((contradiction.I, contradiction.J), contradiction.V).ToEnumerable(),
-                    subSteps: contradiction.ContraditionSteps
+                    subSteps: contradiction.ContradictionSteps
                 ));
 
                 if (!ClearValue(contradiction.I, contradiction.J, contradiction.V))
@@ -4518,5 +4518,5 @@ public class Solver
         int I,
         int J,
         int V,
-        List<LogicalStepDesc> ContraditionSteps);
+        List<LogicalStepDesc> ContradictionSteps);
 }
