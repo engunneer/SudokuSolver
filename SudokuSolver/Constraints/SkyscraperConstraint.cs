@@ -9,7 +9,7 @@ public class SkyscraperConstraint : Constraint
     private readonly HashSet<(int, int)> cellsLookup;
     private readonly string specificName;
     private bool needsLogic = true;
-    private string memoPrefix;
+    private readonly string memoPrefix;
 
     public override string SpecificName => specificName;
 

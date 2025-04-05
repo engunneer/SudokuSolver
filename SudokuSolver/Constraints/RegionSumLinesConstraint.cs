@@ -25,8 +25,7 @@ public class RegionSumLinesConstraint : EqualSumsConstraint
         foreach (var cell in lineCells)
         {
             SudokuGroup curRegion = solver.Groups
-                .Where(group => group.GroupType == GroupType.Region && group.Cells.Contains(cell))
-                .FirstOrDefault();
+                .FirstOrDefault(group => group.GroupType == GroupType.Region && group.Cells.Contains(cell));
             if (curRegion == null)
             {
                 continue;

@@ -33,9 +33,7 @@ public class ExtensionTests
     [TestMethod]
     public void LengthGreaterThanDigitsReturnsRest()
     {
-        int leadingZeros = 0;
-
-        Assert.AreEqual(2345, 12345.SubInt(1, 10, out leadingZeros));
+        Assert.AreEqual(2345, 12345.SubInt(1, 10, out int leadingZeros));
         Assert.AreEqual(12345, 12345.SubInt(0, 100, out leadingZeros));
     }
 

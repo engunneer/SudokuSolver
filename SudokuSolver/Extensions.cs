@@ -124,7 +124,7 @@ public static class Extensions
 
     public static int Take(this int subject, int numberDigits)
     {
-        return subject.SubInt(0, numberDigits, out int ignore);
+        return subject.SubInt(0, numberDigits, out int _);
     }
 
     public static int Skip(this int subject, int numberToSkip, out int leadingZeros)

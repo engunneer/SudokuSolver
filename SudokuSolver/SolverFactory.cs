@@ -7,8 +7,7 @@ namespace SudokuSolver
     [JsonSerializable(typeof(FPuzzlesBoard))]
     [JsonSourceGenerationOptions(DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault)]
     internal partial class FpuzzlesJsonContext : JsonSerializerContext
-    {
-    }
+    { }
 
     public static class SolverFactory
     {

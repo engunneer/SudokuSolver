@@ -3,12 +3,11 @@
 [Constraint(DisplayName = "Taxicab", ConsoleName = "taxi")]
 public class TaxicabConstraint : Constraint
 {
-    private readonly int distance;
     private readonly List<(int, int)> offsets = new();
 
     public TaxicabConstraint(Solver sudokuSolver, string options) : base(sudokuSolver, options)
     {
-        distance = int.Parse(options);
+        var distance = int.Parse(options);
 
         for (int i1 = -distance; i1 <= distance; i1++)
         {

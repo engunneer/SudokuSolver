@@ -1381,7 +1381,10 @@ public class Solver
                 int groupPriority = MAX_VALUE - smallestGroupSize + 1;
                 priority += MAX_VALUE * groupPriority;
             }
-            catch (Exception) { }
+            catch (Exception)
+            {
+                // ignored
+            }
         }
 
         // Within the same priority level, sort by cell order

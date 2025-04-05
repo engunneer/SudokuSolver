@@ -178,7 +178,7 @@ public class BoxIndexerConstraint : AbstractIndexerConstraint
         {
             for (int j = 0; j < WIDTH; j++)
             {
-                SudokuGroup region = solver.CellToGroupMap[(i, j)].Where(g => g.GroupType == GroupType.Region).FirstOrDefault();
+                SudokuGroup region = solver.CellToGroupMap[(i, j)].FirstOrDefault(g => g.GroupType == GroupType.Region);
                 if (region != null)
                 {
                     regionMap[(i, j)] = region;

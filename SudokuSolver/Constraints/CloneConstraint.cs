@@ -201,7 +201,7 @@ public class CloneConstraint : Constraint
                         elims.AddRange(sudokuSolver.CandidateIndexes(removed1, cell1.ToEnumerable()));
                     }
 
-                    if (elims != null && elims.Count > 0)
+                    if (elims is { Count: > 0 })
                     {
                         bool invalid = !sudokuSolver.ClearCandidates(elims);
                         logicalStepDescription?.Add(new(
