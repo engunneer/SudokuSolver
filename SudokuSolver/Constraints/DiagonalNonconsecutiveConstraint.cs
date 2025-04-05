@@ -1,12 +1,8 @@
 ﻿namespace SudokuSolver.Constraints;
 
 [Constraint(DisplayName = "Diagonal Nonconsecutive", ConsoleName = "dnc")]
-public class DiagonalNonconsecutiveConstraint : Constraint
+public class DiagonalNonconsecutiveConstraint(Solver sudokuSolver, string options) : Constraint(sudokuSolver, options)
 {
-    public DiagonalNonconsecutiveConstraint(Solver sudokuSolver, string options) : base(sudokuSolver, options)
-    {
-    }
-
     public override bool EnforceConstraint(Solver sudokuSolver, int i, int j, int val)
     {
         if (val > 1)

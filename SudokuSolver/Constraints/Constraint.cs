@@ -1,23 +1,13 @@
 ﻿namespace SudokuSolver.Constraints;
 
-public abstract class Constraint
+public abstract class Constraint(Solver sudokuSolver, string options)
 {
-    protected readonly int WIDTH;
-    protected readonly int HEIGHT;
-    protected readonly int MAX_VALUE;
-    protected readonly uint ALL_VALUES_MASK;
-    protected readonly int NUM_CELLS;
-    protected readonly string OPTIONS;
-
-    public Constraint(Solver sudokuSolver, string options)
-    {
-        WIDTH = sudokuSolver.WIDTH;
-        HEIGHT = sudokuSolver.HEIGHT;
-        MAX_VALUE = sudokuSolver.MAX_VALUE;
-        ALL_VALUES_MASK = sudokuSolver.ALL_VALUES_MASK;
-        NUM_CELLS = sudokuSolver.NUM_CELLS;
-        OPTIONS = options;
-    }
+    protected readonly int WIDTH = sudokuSolver.WIDTH;
+    protected readonly int HEIGHT = sudokuSolver.HEIGHT;
+    protected readonly int MAX_VALUE = sudokuSolver.MAX_VALUE;
+    protected readonly uint ALL_VALUES_MASK = sudokuSolver.ALL_VALUES_MASK;
+    protected readonly int NUM_CELLS = sudokuSolver.NUM_CELLS;
+    protected readonly string OPTIONS = options;
 
     /// <summary>
     /// Gets the name from the Constraint attribute

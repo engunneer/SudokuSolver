@@ -1,15 +1,11 @@
 ﻿namespace SudokuSolver.Constraints
 {
-    public abstract class EqualSumsConstraint : Constraint
+    public abstract class EqualSumsConstraint(Solver solver, string options) : Constraint(solver, options)
     {
         private List<(int, int)> cells;
         private HashSet<(int, int)> cellsHash;
         private List<List<(int, int)>> cellGroups;
         private List<SumCellsHelper> sumCellsHelpers;
-
-        protected EqualSumsConstraint(Solver solver, string options) : base(solver, options)
-        {
-        }
 
         protected abstract List<List<(int, int)>> GetCellGroups(Solver solver);
 

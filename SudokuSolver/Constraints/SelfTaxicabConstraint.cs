@@ -1,12 +1,8 @@
 ﻿namespace SudokuSolver.Constraints;
 
 [Constraint(DisplayName = "Self Taxicab", ConsoleName = "selftaxi")]
-public class SelfTaxicabConstraint : Constraint
+public class SelfTaxicabConstraint(Solver sudokuSolver, string options) : Constraint(sudokuSolver, options)
 {
-    public SelfTaxicabConstraint(Solver sudokuSolver, string options) : base(sudokuSolver, options)
-    {
-    }
-
     public override bool EnforceConstraint(Solver sudokuSolver, int i, int j, int val)
     {
         foreach (var cell in SeenCellsByValueMask((i, j), ValueMask(val)))

@@ -145,32 +145,26 @@ public abstract class AbstractIndexerConstraint : Constraint
 }
 
 [Constraint(DisplayName = "Row Indexer", ConsoleName = "rowindexer")]
-public class RowIndexerConstraint : AbstractIndexerConstraint
+public class RowIndexerConstraint(Solver sudokuSolver, string options)
+    : AbstractIndexerConstraint(sudokuSolver, options)
 {
-    public RowIndexerConstraint(Solver sudokuSolver, string options) : base(sudokuSolver, options) { }
-
     protected override (int, int, int) TargetCell(Solver solver, int i, int j, int v) => (v - 1, j, i + 1);
     protected override (int, int, int) InvTargetCell(Solver solver, int i, int j, int v) => (v - 1, j, i + 1);
 }
 
 [Constraint(DisplayName = "Col Indexer", ConsoleName = "colindexer")]
-public class ColIndexerConstraint : AbstractIndexerConstraint
+public class ColIndexerConstraint(Solver sudokuSolver, string options)
+    : AbstractIndexerConstraint(sudokuSolver, options)
 {
-    public ColIndexerConstraint(Solver sudokuSolver, string options) : base(sudokuSolver, options) { }
-
     protected override (int, int, int) TargetCell(Solver solver, int i, int j, int v) => (i, v - 1, j + 1);
     protected override (int, int, int) InvTargetCell(Solver solver, int i, int j, int v) => (i, v - 1, j + 1);
 }
 
 [Constraint(DisplayName = "Box Indexer", ConsoleName = "boxindexer")]
-public class BoxIndexerConstraint : AbstractIndexerConstraint
+public class BoxIndexerConstraint(Solver solver, string options) : AbstractIndexerConstraint(solver, options)
 {
     private readonly Dictionary<(int, int), SudokuGroup> regionMap = new();
     private readonly Dictionary<(int, int), int> regionIndex = new();
-
-    public BoxIndexerConstraint(Solver solver, string options) : base(solver, options)
-    {
-    }
 
     public override LogicResult InitCandidates(Solver solver)
     {
