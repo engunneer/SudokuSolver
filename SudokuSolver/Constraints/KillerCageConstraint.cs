@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace SudokuSolver.Constraints;
+﻿namespace SudokuSolver.Constraints;
 
 [Constraint(DisplayName = "Killer Cage", ConsoleName = "killer")]
 public class KillerCageConstraint : Constraint

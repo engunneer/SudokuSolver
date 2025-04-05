@@ -1,6 +1,4 @@
-﻿using System.Text.Json.Serialization;
-
-namespace SudokuSolver.Constraints;
+﻿namespace SudokuSolver.Constraints;
 
 public abstract class Constraint
 {

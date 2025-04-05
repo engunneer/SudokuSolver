@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace SudokuSolver.Constraints;
+﻿namespace SudokuSolver.Constraints;
 
 [Constraint(DisplayName = "Whispers", ConsoleName = "whispers")]
 public class WhispersConstraint : Constraint

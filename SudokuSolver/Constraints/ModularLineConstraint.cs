@@ -1,6 +1,4 @@
-﻿using System.Runtime.Intrinsics;
-
-namespace SudokuSolver.Constraints;
+﻿namespace SudokuSolver.Constraints;
 
 [Constraint(DisplayName = "Modular Line", ConsoleName = "modl")]
 public class ModularLineConstraint : Constraint

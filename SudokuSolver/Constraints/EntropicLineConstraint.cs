@@ -1,6 +1,4 @@
-﻿using System.Runtime.Intrinsics;
-
-namespace SudokuSolver.Constraints;
+﻿namespace SudokuSolver.Constraints;
 
 [Constraint(DisplayName = "Entropic Line", ConsoleName = "entrol")]
 public class EntropicLineConstraint : Constraint

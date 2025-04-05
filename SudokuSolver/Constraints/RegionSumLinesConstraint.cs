@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace SudokuSolver.Constraints;
+﻿namespace SudokuSolver.Constraints;
 
 [Constraint(DisplayName = "Region Sum Lines", ConsoleName = "rsl")]
 public class RegionSumLinesConstraint : EqualSumsConstraint

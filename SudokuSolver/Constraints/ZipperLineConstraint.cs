@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SudokuSolver.Constraints
+﻿namespace SudokuSolver.Constraints
 {
     [Constraint(DisplayName = "Zipper Line", ConsoleName = "zipper")]
     public class ZipperLineConstraint : EqualSumsConstraint

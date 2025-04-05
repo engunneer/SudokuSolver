@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace SudokuSolver.Constraints;
+﻿namespace SudokuSolver.Constraints;
 
 [Constraint(DisplayName = "X-Sum", ConsoleName = "xsum")]
 public class XSumConstraint : Constraint

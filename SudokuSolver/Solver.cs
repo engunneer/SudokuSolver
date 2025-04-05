@@ -1,8 +1,6 @@
 ﻿//#define PROFILING
 //#define INFINITE_LOOP_CHECK
 
-using System.Reflection.Metadata.Ecma335;
-
 namespace SudokuSolver;
 
 public enum GroupType
