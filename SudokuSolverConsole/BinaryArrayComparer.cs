@@ -4,7 +4,7 @@ namespace SudokuSolverConsole;
 
 public class ByteArrayComparer : IEqualityComparer<byte[]>
 {
-    public bool Equals(byte[] x, byte[] y) => x.SequenceEqual(y);
+    public bool Equals(byte[] x, byte[] y) => x != null && y != null && x.SequenceEqual(y);
 
     public int GetHashCode([DisallowNull] byte[] data)
     {

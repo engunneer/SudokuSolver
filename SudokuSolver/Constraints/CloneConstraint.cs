@@ -197,7 +197,7 @@ public class CloneConstraint : Constraint
                     uint removed1 = (cellMask1 & ~combinedMask);
                     if (removed0 != 0 || removed1 != 0)
                     {
-                        elims ??= [];
+                        elims = [];
                         elims.AddRange(sudokuSolver.CandidateIndexes(removed0, cell0.ToEnumerable()));
                         elims.AddRange(sudokuSolver.CandidateIndexes(removed1, cell1.ToEnumerable()));
                     }

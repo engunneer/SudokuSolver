@@ -327,7 +327,6 @@ public class ArrowSumConstraint : Constraint
                 var curElims = sudokuSolver.CandidateIndexes(clearMask, circleCell.ToEnumerable());
                 if (curElims.Count != 0)
                 {
-                    elims ??= [];
                     elims.AddRange(curElims);
                 }
             }

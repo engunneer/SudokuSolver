@@ -54,7 +54,7 @@ public sealed record SudokuGroup(GroupType GroupType, string Name, List<(int, in
 
         if (Name != other.Name)
         {
-            return Name.CompareTo(other.Name);
+            return string.Compare(Name, other.Name, StringComparison.Ordinal);
         }
 
         if (Cells.Count != other.Cells.Count)
