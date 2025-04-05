@@ -141,7 +141,7 @@ public abstract class Constraint
     /// Returns a list of cells which must contain the given value.
     /// </summary>
     /// <param name="sudokuSolver">The solver.</param>
-    /// <param name="value">The value which must by contained</param>
+    /// <param name="value">The value which must be contained</param>
     /// <returns>A list of cells which must contain that value, or null if none.</returns>
     public virtual List<(int, int)> CellsMustContain(Solver sudokuSolver, int value) => null;
 
@@ -150,7 +150,9 @@ public abstract class Constraint
     /// by removing the value from all cells with it and seeing if there's a contradiction
     /// after stepping logic.
     /// </summary>
-    /// <param name="sudokuSolver">The solver.</param>
+    /// <param name="solver">The solver.</param>
+    /// <param name="cellsEnum">...</param>
+    /// <param name="value">The value which must be contained</param>
     protected List<(int, int)> CellsMustContainByRunningLogic(Solver solver, IEnumerable<(int, int)> cellsEnum, int value)
     {
         List<(int, int)> result = null;
@@ -192,6 +194,7 @@ public abstract class Constraint
     /// Add any weak or strong links that are initially known due to this constraint
     /// </summary>
     /// <param name="sudokuSolver">The solver.</param>
+    /// <param name="logicalStepDescription"></param>
     public virtual LogicResult InitLinks(Solver sudokuSolver, List<LogicalStepDesc> logicalStepDescription) => LogicResult.None;
 
     /// <summary>
@@ -200,7 +203,7 @@ public abstract class Constraint
     /// at a time, running StepLogic, and then seeing what other candidates
     /// get eliminated.
     /// </summary>
-    /// <param name="sudokuSolver">The solver.</param>
+    /// <param name="solver">The solver.</param>
     protected LogicResult InitLinksByRunningLogic(Solver solver, IEnumerable<(int, int)> cellsEnum, List<LogicalStepDesc> logicalStepDescription)
     {
         bool invalid = false;

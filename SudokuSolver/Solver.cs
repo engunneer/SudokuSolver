@@ -828,7 +828,7 @@ public class Solver
     /// <summary>
     /// Returns which cells must be distinct from the all the inputted cells for a specific set of values.
     /// </summary>
-    /// <param name="value"></param>
+    /// <param name="mask"></param>
     /// <param name="cells"></param>
     /// <returns></returns>
     public HashSet<(int, int)> SeenCellsByValueMask(uint mask, params (int, int)[] cells)
@@ -1456,7 +1456,9 @@ public class Solver
     /// The board itself is modified to have the solution as its board values.
     /// If no solution is found, the board is left in an invalid state.
     /// </summary>
+    /// <param name="multiThread"></param>
     /// <param name="cancellationToken">Pass in to support cancelling the solve.</param>
+    /// <param name="isRandom"></param>
     /// <returns>True if a solution is found, otherwise false.</returns>
     public bool FindSolution(bool multiThread = false, CancellationToken cancellationToken = default, bool isRandom = false)
     {
@@ -1675,6 +1677,8 @@ public class Solver
     /// <param name="maxSolutions">The maximum number of solutions to find. Pass 0 for no maximum.</param>
     /// <param name="multiThread">Whether to use multiple threads.</param>
     /// <param name="progressEvent">An event to receive the progress count as solutions are found.</param>
+    /// <param name="solutionEvent">An event to receive...</param>
+    /// <param name="skipSolutions"></param>
     /// <param name="cancellationToken">Pass in to support cancelling the count.</param>
     /// <returns>The solution count found.</returns>
     public ulong CountSolutions(ulong maxSolutions = 0, bool multiThread = false, Action<ulong> progressEvent = null, Action<Solver> solutionEvent = null, HashSet<string> skipSolutions = null, CancellationToken cancellationToken = default)
@@ -1992,8 +1996,7 @@ public class Solver
     /// Remove any candidates which do not lead to an actual solution to the board.
     /// </summary>
     /// <param name="multiThread">If true, uses multiple threads to calculate.</param>
-    /// <param name="skipConsolidate">If true, the initial consolidate board is skipped.</param>
-    /// <param name="progressEvent">Recieve progress notifications. Sends the true candidates currently found.</param>
+    /// <param name="progressEvent">Receive progress notifications. Sends the true candidates currently found.</param>
     /// <param name="numSolutions">Expected to be HEIGHT * WIDTH * MAX_VALUE in size. The number of solutions per candidate, capped to 9.</param>
     /// <param name="cancellationToken">Pass in to support cancelling.</param>
     /// <returns>True if there are solutions and candidates are filled. False if there are no solutions.</returns>
@@ -2245,7 +2248,7 @@ public class Solver
     /// <summary>
     /// Perform a logical solve until either the board is solved or there are no logical steps found.
     /// </summary>
-    /// <param name="stepsDescription">Get a full description of all logical steps taken.</param>
+    /// <param name="logicalStepDescs">Get a full description of all logical steps taken.</param>
     /// <returns></returns>
     public LogicResult ConsolidateBoard(List<LogicalStepDesc> logicalStepDescs = null)
     {
@@ -2357,10 +2360,10 @@ public class Solver
     }
 
     /// <summary>
-    /// Perform one step of a logical solve and fill a description of the step taken.
+    /// Perform one step of a logical solve and fill in a description of the step taken.
     /// The description will contain the reason the board is invalid if that is what is returned.
     /// </summary>
-    /// <param name="stepDescription"></param>
+    /// <param name="logicalStepDescs">Get a full description of all logical steps taken.</param>
     /// <returns></returns>
     public LogicResult StepLogic(List<LogicalStepDesc> logicalStepDescs)
     {
@@ -3925,6 +3928,7 @@ public class Solver
 
         public static StrongLinkDesc Empty => new(string.Empty, null);
     }
+
     private Dictionary<int, StrongLinkDesc>[] FindStrongLinks()
     {
         Dictionary<int, StrongLinkDesc>[] strongLinks = new Dictionary<int, StrongLinkDesc>[NUM_CANDIDATES];

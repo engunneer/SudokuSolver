@@ -62,8 +62,7 @@ public abstract class OrthogonalValueConstraint : Constraint
     protected abstract int DefaultMarkerValue { get; }
 
     public Dictionary<(int, int, int, int), int> Markers => markers;
-
-
+    
     private static readonly Regex negRegex = new(@"neg(\d*)");
     private static readonly Regex twoCellsRegex = new(@"(\d*)r(\d+)c(\d+)r(\d+)c(\d+)");
     private static readonly Regex sharedRowRegex = new(@"(\d*)r(\d+)[,-](\d+)c(\d+)");

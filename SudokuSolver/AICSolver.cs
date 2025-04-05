@@ -55,6 +55,9 @@ internal class AICSolver
         public static StrongLinkDesc Empty => new(string.Empty, null);
     }
 
+    /// <summary> </summary>
+    /// <param name="solver"></param>
+    /// <param name="logicalStepDescs">Get a full description of all logical steps taken.</param>
     public AICSolver(Solver solver, List<LogicalStepDesc> logicalStepDescs)
     {
         this.solver = solver;
