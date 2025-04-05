@@ -189,10 +189,7 @@ public class RenbanConstraint : Constraint
                             }
                             if (clearResult == LogicResult.Changed)
                             {
-                                if (clearedMasks == null)
-                                {
-                                    clearedMasks = new uint[numUnsetCells];
-                                }
+                                clearedMasks ??= new uint[numUnsetCells];
                                 clearedMasks[cellIndex] |= curClearMask;
                             }
                         }
@@ -238,37 +235,29 @@ public class RenbanConstraint : Constraint
                     }
                     if (clearResult == LogicResult.Changed)
                     {
-                        if (clearedMasks == null)
-                        {
-                            clearedMasks = new uint[numUnsetCells];
-                        }
+                        clearedMasks ??= new uint[numUnsetCells];
                         clearedMasks[cellIndex] |= clearMask;
                     }
                 }
             }
 
-            if (clearedMasks != null)
+            if (clearedMasks == null) return LogicResult.None;
+            if (logicalStepDescription == null) return LogicResult.Changed;
+            
+            logicalStepDescription.Append($"Cleared values");
+            bool first = true;
+            for (int cellIndex = 0; cellIndex < numUnsetCells; cellIndex++)
             {
-                if (logicalStepDescription != null)
+                if (clearedMasks[cellIndex] == 0) continue;
+                var cell = unsetCells[cellIndex];
+                if (!first)
                 {
-                    logicalStepDescription.Append($"Cleared values");
-                    bool first = true;
-                    for (int cellIndex = 0; cellIndex < numUnsetCells; cellIndex++)
-                    {
-                        if (clearedMasks[cellIndex] != 0)
-                        {
-                            var cell = unsetCells[cellIndex];
-                            if (!first)
-                            {
-                                logicalStepDescription.Append(';');
-                            }
-                            logicalStepDescription.Append($" {MaskToString(clearedMasks[cellIndex])} from {CellName(cell)}");
-                            first = false;
-                        }
-                    }
+                    logicalStepDescription.Append(';');
                 }
-                return LogicResult.Changed;
+                logicalStepDescription.Append($" {MaskToString(clearedMasks[cellIndex])} from {CellName(cell)}");
+                first = false;
             }
+            return LogicResult.Changed;
         }
 
         return LogicResult.None;

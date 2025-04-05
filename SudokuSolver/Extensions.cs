@@ -92,7 +92,7 @@ public static class Extensions
         return list;
     }
 
-    private static readonly int[] POWERS_OF_10 = { 1, 10, 100, 1000, 10000, 100000, 1000000, 10000000, 100000000, 1000000000 };
+    private static readonly int[] POWERS_OF_10 = [1, 10, 100, 1000, 10000, 100000, 1000000, 10000000, 100000000, 1000000000];
 
     public static int SubInt(this int subject, int startIndex, int length, out int leadingZeros)
     {

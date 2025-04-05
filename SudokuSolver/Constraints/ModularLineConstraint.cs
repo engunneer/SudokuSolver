@@ -32,14 +32,11 @@ public class ModularLineConstraint : Constraint
     public override LogicResult InitLinks(Solver solver, List<LogicalStepDesc> logicalStepDescription)
     {
         // Calculate the three groups
-        List<List<int>> groups = new() { new(), new(), new() };
+        List<List<int>> groups = [new(), new(), new()];
         for (int v = 1; v <= MAX_VALUE; v++)
         {
             int groupIndex = v % 3;
-            if (groups[groupIndex] == null)
-            {
-                groups[groupIndex] = new();
-            }
+            groups[groupIndex] ??= [];
             groups[groupIndex].Add(v);
         }
 
@@ -96,7 +93,7 @@ public class ModularLineConstraint : Constraint
         List<ModularLineConstraint> constraints = new(cells.Count - 2);
         for (int i = 0; i < cells.Count - 2; i++)
         {
-            List<(int, int)> cellsTriple = new() { cells[i], cells[i + 1], cells[i + 2] };
+            List<(int, int)> cellsTriple = [cells[i], cells[i + 1], cells[i + 2]];
             // Ensure that the lines have consistent order
             if (cellsTriple[0].CompareTo(cellsTriple[2]) > 0)
             {

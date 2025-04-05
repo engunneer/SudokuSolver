@@ -3,14 +3,14 @@
     [Constraint(DisplayName = "Knightmare", ConsoleName = "knightmare")]
     public class KnightmareConstraint : Constraint
     {
-        private readonly List<int> disallowedSums = null;
+        private readonly List<int> disallowedSums;
 
         public KnightmareConstraint(Solver sudokuSolver, string options) : base(sudokuSolver, options)
         {
             disallowedSums = options.Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).ToList();
             if (disallowedSums.Count == 0)
             {
-                disallowedSums = new List<int>() { 5, 15 };
+                disallowedSums = [5, 15];
             }
         }
 
@@ -18,7 +18,7 @@
 
         public override LogicResult InitLinks(Solver sudokuSolver, List<LogicalStepDesc> logicalStepDescription)
         {
-            List<(int, int)> disallowedValuePairs = new();
+            List<(int, int)> disallowedValuePairs = [];
             for (int v0 = 1; v0 <= MAX_VALUE; v0++)
             {
                 for (int v1 = 1; v1 <= MAX_VALUE; v1++)

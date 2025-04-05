@@ -3,11 +3,11 @@
 [Constraint(DisplayName = "Quadruple", ConsoleName = "quad")]
 public class QuadrupleConstraint : Constraint
 {
-    public readonly List<(int, int)> cells = null;
+    public readonly List<(int, int)> cells;
     private readonly HashSet<(int, int)> cellsLookup;
-    public readonly List<int> requiredValues = new();
+    public readonly List<int> requiredValues = [];
     private readonly uint requiredMask;
-    private List<(int, int)> groupCells = null;
+    private List<(int, int)> groupCells;
 
     public override string SpecificName => $"Quadruple at {CellName(cells[0])}";
 
@@ -50,7 +50,7 @@ public class QuadrupleConstraint : Constraint
 
         var board = sudokuSolver.Board;
         uint availableMask = 0;
-        List<(int, int)> possibleCells = new();
+        List<(int, int)> possibleCells = [];
         foreach (var (i, j) in cells)
         {
             uint cellMask = board[i, j];
@@ -178,7 +178,7 @@ public class QuadrupleConstraint : Constraint
         int numRemainingRequired = remainingValues.Count;
 
         uint availableMask = 0;
-        List<(int, int)> possibleCells = new();
+        List<(int, int)> possibleCells = [];
         foreach (var (i, j) in cells)
         {
             uint cellMask = board[i, j];
@@ -257,7 +257,7 @@ public class QuadrupleConstraint : Constraint
 
             int numCellsNeeded = remainingValues.Count(value => value == v);
 
-            List<(int, int)> possibleSetCells = new();
+            List<(int, int)> possibleSetCells = [];
             foreach (var (i, j) in cells)
             {
                 uint cellMask = board[i, j];

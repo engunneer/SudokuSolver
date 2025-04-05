@@ -3,7 +3,7 @@
 [Constraint(DisplayName = "Clone", ConsoleName = "clone")]
 public class CloneConstraint : Constraint
 {
-    public readonly List<((int, int), (int, int))> cellPairs = new();
+    public readonly List<((int, int), (int, int))> cellPairs = [];
     private readonly Dictionary<(int, int), List<(int, int)>> cellToClones = new();
 
     public CloneConstraint(Solver sudokuSolver, string options) : base(sudokuSolver, options)
@@ -158,7 +158,7 @@ public class CloneConstraint : Constraint
                 bool cellSet1 = IsValueSet(cellMask1);
                 if (cellSet0 && cellSet1)
                 {
-                    logicalStepDescription?.Add(new($"{CellName(i0, j0)} has value {GetValue(cellMask0)} but its clone at {CellName(i1, j1)} has value {GetValue(cellMask1)}", new (int, int)[] { cell0, cell1 }));
+                    logicalStepDescription?.Add(new($"{CellName(i0, j0)} has value {GetValue(cellMask0)} but its clone at {CellName(i1, j1)} has value {GetValue(cellMask1)}", [cell0, cell1]));
                     return LogicResult.Invalid;
                 }
 
@@ -166,20 +166,21 @@ public class CloneConstraint : Constraint
                 {
                     if (!sudokuSolver.SetValue(i1, j1, GetValue(cellMask0)))
                     {
-                        logicalStepDescription?.Add(new($"{CellName(i0, j0)} has value {GetValue(cellMask0)} but its clone at {CellName(i1, j1)} cannot have this value.", new (int, int)[] { cell0, cell1 }));
+                        logicalStepDescription?.Add(new($"{CellName(i0, j0)} has value {GetValue(cellMask0)} but its clone at {CellName(i1, j1)} cannot have this value.", [cell0, cell1]));
                         return LogicResult.Invalid;
                     }
-                    logicalStepDescription?.Add(new($"{CellName(i0, j0)} with value {GetValue(cellMask0)} is cloned into {CellName(i1, j1)}", new (int, int)[] { cell0, cell1 }));
+                    logicalStepDescription?.Add(new($"{CellName(i0, j0)} with value {GetValue(cellMask0)} is cloned into {CellName(i1, j1)}", [cell0, cell1]));
                     return LogicResult.Changed;
                 }
                 else if (cellSet1)
                 {
                     if (!sudokuSolver.SetValue(i0, j0, GetValue(cellMask1)))
                     {
-                        logicalStepDescription?.Add(new($"{CellName(i1, j1)} has value {GetValue(cellMask1)} but its clone at {CellName(i0, j0)} cannot have this value.", new (int, int)[] { cell0, cell1 }));
+                        logicalStepDescription?.Add(new($"{CellName(i1, j1)} has value {GetValue(cellMask1)} but its clone at {CellName(i0, j0)} cannot have this value.", [cell0, cell1]));
                         return LogicResult.Invalid;
                     }
-                    logicalStepDescription?.Add(new($"{CellName(i1, j1)} with value {GetValue(cellMask1)} is cloned into {CellName(i0, j0)}", new (int, int)[] { cell0, cell1 }));
+                    logicalStepDescription?.Add(new($"{CellName(i1, j1)} with value {GetValue(cellMask1)} is cloned into {CellName(i0, j0)}",
+                        [cell0, cell1]));
                     return LogicResult.Changed;
                 }
                 else
@@ -187,7 +188,7 @@ public class CloneConstraint : Constraint
                     uint combinedMask = cellMask0 & cellMask1;
                     if (combinedMask == 0)
                     {
-                        logicalStepDescription?.Add(new($"No value can go into both {CellName(i0, j0)} with candidates {MaskToString(cellMask0)} and its clone at {CellName(i1, j1)} with candidates {MaskToString(cellMask1)}.", new (int, int)[] { cell0, cell1 }));
+                        logicalStepDescription?.Add(new($"No value can go into both {CellName(i0, j0)} with candidates {MaskToString(cellMask0)} and its clone at {CellName(i1, j1)} with candidates {MaskToString(cellMask1)}.", [cell0, cell1]));
                         return LogicResult.Invalid;
                     }
 
@@ -196,7 +197,7 @@ public class CloneConstraint : Constraint
                     uint removed1 = (cellMask1 & ~combinedMask);
                     if (removed0 != 0 || removed1 != 0)
                     {
-                        elims ??= new();
+                        elims ??= [];
                         elims.AddRange(sudokuSolver.CandidateIndexes(removed0, cell0.ToEnumerable()));
                         elims.AddRange(sudokuSolver.CandidateIndexes(removed1, cell1.ToEnumerable()));
                     }
@@ -206,7 +207,7 @@ public class CloneConstraint : Constraint
                         bool invalid = !sudokuSolver.ClearCandidates(elims);
                         logicalStepDescription?.Add(new(
                             desc: $"Clone {CellName(cell0)} and {CellName(cell1)} => {sudokuSolver.DescribeElims(elims)}",
-                            sourceCandidates: Enumerable.Empty<int>(),
+                            sourceCandidates: [],
                             elimCandidates: elims
                         ));
                         return invalid ? LogicResult.Invalid : LogicResult.Changed;

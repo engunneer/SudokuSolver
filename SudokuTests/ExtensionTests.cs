@@ -54,7 +54,7 @@ public class ExtensionTests
     [TestMethod]
     public void WorksForLargeInts()
     {
-        Assert.AreEqual(10, Int32.MaxValue.Length());
+        Assert.AreEqual(10, int.MaxValue.Length());
     }
 
     [TestMethod]

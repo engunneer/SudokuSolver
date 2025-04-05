@@ -157,7 +157,7 @@ namespace SudokuSolver
                 for (int i = 0; i < givens.Length; i++)
                 {
                     char c = givens[i];
-                    if (c >= '1' && c <= '9')
+                    if (c is >= '1' and <= '9')
                     {
                         if (!solver.SetValue(i / size, i % size, c - '0'))
                         {
@@ -174,7 +174,7 @@ namespace SudokuSolver
                 {
                     char c0 = givens[i * 2];
                     char c1 = givens[i * 2 + 1];
-                    if (c0 >= '1' && c0 <= '9' && c1 >= '0' && c1 <= '9' || c0 == '0' && c1 >= '1' && c1 <= '9')
+                    if (c0 is >= '1' and <= '9' && c1 is >= '0' and <= '9' || c0 == '0' && c1 is >= '1' and <= '9')
                     {
                         int val = (c0 - '0') * 10 + (c1 - '0');
                         if (!solver.SetValue(i / size, i % size, val))
@@ -228,7 +228,7 @@ namespace SudokuSolver
                 for (int i = 0; i < givens.Length; i++)
                 {
                     char c = givens[i];
-                    if (c >= '1' && c <= '9')
+                    if (c is >= '1' and <= '9')
                     {
                         if (!solver.SetValue(i / size, i % size, c - '0'))
                         {
@@ -245,7 +245,7 @@ namespace SudokuSolver
                 {
                     char c0 = givens[i * 2];
                     char c1 = givens[i * 2 + 1];
-                    if (c0 >= '1' && c0 <= '9' && c1 >= '0' && c1 <= '9' || c0 == '0' && c1 >= '1' && c1 <= '9')
+                    if (c0 is >= '1' and <= '9' && c1 is >= '0' and <= '9' || c0 == '0' && c1 is >= '1' and <= '9')
                     {
                         int val = (c0 - '0') * 10 + (c1 - '0');
                         if (!solver.SetValue(i / size, i % size, val))
@@ -522,7 +522,7 @@ namespace SudokuSolver
                 }
             }
 
-            if (fpuzzlesData.odd != null && fpuzzlesData.odd.Length > 0)
+            if (fpuzzlesData.odd is { Length: > 0 })
             {
                 StringBuilder cells = new();
                 foreach (var cell in fpuzzlesData.odd)
@@ -535,7 +535,7 @@ namespace SudokuSolver
                 solver.AddConstraint(typeof(OddConstraint), cells.ToString());
             }
 
-            if (fpuzzlesData.even != null && fpuzzlesData.even.Length > 0)
+            if (fpuzzlesData.even is { Length: > 0 })
             {
                 StringBuilder cells = new();
                 foreach (var cell in fpuzzlesData.even)
@@ -548,7 +548,7 @@ namespace SudokuSolver
                 solver.AddConstraint(typeof(EvenConstraint), cells.ToString());
             }
 
-            if (fpuzzlesData.minimum != null && fpuzzlesData.minimum.Length > 0)
+            if (fpuzzlesData.minimum is { Length: > 0 })
             {
                 StringBuilder cells = new();
                 foreach (var cell in fpuzzlesData.minimum)
@@ -561,7 +561,7 @@ namespace SudokuSolver
                 solver.AddConstraint(typeof(MinimumConstraint), cells.ToString());
             }
 
-            if (fpuzzlesData.maximum != null && fpuzzlesData.maximum.Length > 0)
+            if (fpuzzlesData.maximum is { Length: > 0 })
             {
                 StringBuilder cells = new();
                 foreach (var cell in fpuzzlesData.maximum)
@@ -574,7 +574,7 @@ namespace SudokuSolver
                 solver.AddConstraint(typeof(MaximumConstraint), cells.ToString());
             }
 
-            if (fpuzzlesData.rowindexer != null && fpuzzlesData.rowindexer.Length > 0)
+            if (fpuzzlesData.rowindexer is { Length: > 0 })
             {
                 StringBuilder cells = new();
                 foreach (var rowindexer in fpuzzlesData.rowindexer)
@@ -590,7 +590,7 @@ namespace SudokuSolver
                 solver.AddConstraint(typeof(RowIndexerConstraint), cells.ToString());
             }
 
-            if (fpuzzlesData.columnindexer != null && fpuzzlesData.columnindexer.Length > 0)
+            if (fpuzzlesData.columnindexer is { Length: > 0 })
             {
                 StringBuilder cells = new();
                 foreach (var colindexer in fpuzzlesData.columnindexer)
@@ -606,7 +606,7 @@ namespace SudokuSolver
                 solver.AddConstraint(typeof(ColIndexerConstraint), cells.ToString());
             }
 
-            if (fpuzzlesData.boxindexer != null && fpuzzlesData.boxindexer.Length > 0)
+            if (fpuzzlesData.boxindexer is { Length: > 0 })
             {
                 StringBuilder cells = new();
                 foreach (var boxindexer in fpuzzlesData.boxindexer)
@@ -707,12 +707,12 @@ namespace SudokuSolver
             }
 
             bool negativeRatio = fpuzzlesData.negative?.Contains("ratio") ?? false;
-            if (fpuzzlesData.ratio != null && fpuzzlesData.ratio.Length > 0 || negativeRatio)
+            if (fpuzzlesData.ratio is { Length: > 0 } || negativeRatio)
             {
                 StringBuilder ratioParams = new();
                 if (negativeRatio)
                 {
-                    HashSet<string> ratioValues = fpuzzlesData.ratio != null && fpuzzlesData.ratio.Length > 0 ? new(fpuzzlesData.ratio.Select(r => r.value)) : new() { "2" };
+                    HashSet<string> ratioValues = fpuzzlesData.ratio is { Length: > 0 } ? new(fpuzzlesData.ratio.Select(r => r.value)) : new() { "2" };
                     foreach (string ratioValue in ratioValues)
                     {
                         if (ratioParams.Length > 0)
@@ -745,7 +745,7 @@ namespace SudokuSolver
                 }
             }
 
-            if (fpuzzlesData.difference != null && fpuzzlesData.difference.Length > 0 || fpuzzlesData.nonconsecutive)
+            if (fpuzzlesData.difference is { Length: > 0 } || fpuzzlesData.nonconsecutive)
             {
                 StringBuilder differenceParams = new();
                 if (fpuzzlesData.nonconsecutive)
@@ -782,7 +782,7 @@ namespace SudokuSolver
             }
 
             bool negativeXV = fpuzzlesData.negative?.Contains("xv") ?? false;
-            if (fpuzzlesData.xv != null && fpuzzlesData.xv.Length > 0 || negativeXV)
+            if (fpuzzlesData.xv is { Length: > 0 } || negativeXV)
             {
                 StringBuilder sumParams = new();
                 if (negativeXV)
@@ -828,7 +828,7 @@ namespace SudokuSolver
                 }
             }
 
-            if (fpuzzlesData.clone != null && fpuzzlesData.clone.Length > 0)
+            if (fpuzzlesData.clone is { Length: > 0 })
             {
                 foreach (var clone in fpuzzlesData.clone)
                 {
@@ -856,7 +856,7 @@ namespace SudokuSolver
                 }
             }
 
-            if (fpuzzlesData.quadruple != null && fpuzzlesData.quadruple.Length > 0)
+            if (fpuzzlesData.quadruple is { Length: > 0 })
             {
                 foreach (var quad in fpuzzlesData.quadruple)
                 {
@@ -1005,7 +1005,7 @@ namespace SudokuSolver
 
                     bool wroteValue = false;
                     int value = val.given || !onlyGivens ? val.value : 0;
-                    int[] pencilMarks = !onlyGivens && val.centerPencilMarks != null && val.centerPencilMarks.Length > 0 ? val.centerPencilMarks : val.givenPencilMarks;
+                    int[] pencilMarks = !onlyGivens && val.centerPencilMarks is { Length: > 0 } ? val.centerPencilMarks : val.givenPencilMarks;
                     if (value != 0)
                     {
                         if (!solver.SetValue(i, j, value))
@@ -1015,7 +1015,7 @@ namespace SudokuSolver
                         comparableData.Write(ValueMask(val.value) | valueSetMask);
                         wroteValue = true;
                     }
-                    else if (pencilMarks != null && pencilMarks.Length > 0)
+                    else if (pencilMarks is { Length: > 0 })
                     {
                         uint marksMask = 0;
                         foreach (int v in pencilMarks)
@@ -1066,7 +1066,7 @@ namespace SudokuSolver
                     name = constraint[0..optionsIndex].Trim();
                     options = constraint[(optionsIndex + 1)..].Trim();
                 }
-                ConstraintManager.AddConstraintByName(solver, name, options);
+                solver.AddConstraintByName(name, options);
             }
         }
 

@@ -11,7 +11,7 @@ public abstract class AbstractIndexerConstraint : Constraint
     // Return the indexer candidate that would target the input candidate.
     protected abstract (int, int, int) InvTargetCell(Solver solver, int i, int j, int v);
 
-    public AbstractIndexerConstraint(Solver solver, string options) : base(solver, options)
+    protected AbstractIndexerConstraint(Solver solver, string options) : base(solver, options)
     {
         if (WIDTH != HEIGHT || WIDTH != MAX_VALUE)
         {
@@ -110,7 +110,7 @@ public abstract class AbstractIndexerConstraint : Constraint
                     if (!HasValue(board[ti, tj], tv))
                     {
                         // The indexer cell can be this value, but the target cell can't be set to the proper target value (so clear it)
-                        elims ??= new();
+                        elims ??= [];
                         elims.Add(solver.CandidateIndex(ii, ij, iv));
                     }
                 }
@@ -119,7 +119,7 @@ public abstract class AbstractIndexerConstraint : Constraint
                     if (HasValue(board[ti, tj], tv))
                     {
                         // The indexer cell cannot be this value, but the target cell can still be set to the target value (so clear it)
-                        elims ??= new();
+                        elims ??= [];
                         elims.Add(solver.CandidateIndex(ti, tj, tv));
                     }
                 }

@@ -3,7 +3,7 @@
 [Constraint(DisplayName = "Taxicab", ConsoleName = "taxi")]
 public class TaxicabConstraint : Constraint
 {
-    private readonly List<(int, int)> offsets = new();
+    private readonly List<(int, int)> offsets = [];
 
     public TaxicabConstraint(Solver sudokuSolver, string options) : base(sudokuSolver, options)
     {

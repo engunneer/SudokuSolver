@@ -21,7 +21,7 @@ public class RegionSumLinesConstraint : EqualSumsConstraint
     protected override List<List<(int, int)>> GetCellGroups(Solver solver)
     {
         SudokuGroup lastRegion = null;
-        List<List<(int, int)>> cellGroups = new();
+        List<List<(int, int)>> cellGroups = [];
         foreach (var cell in lineCells)
         {
             SudokuGroup curRegion = solver.Groups
@@ -33,7 +33,7 @@ public class RegionSumLinesConstraint : EqualSumsConstraint
 
             if (lastRegion != curRegion)
             {
-                cellGroups.Add(new());
+                cellGroups.Add([]);
             }
             cellGroups[^1].Add(cell);
             lastRegion = curRegion;

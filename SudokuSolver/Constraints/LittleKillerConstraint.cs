@@ -17,7 +17,7 @@ public class LittleKillerConstraint : Constraint
     private readonly (int, int) cellStart;
     private readonly HashSet<(int, int)> cells;
     private readonly List<(int, int)> cellsList;
-    private SumCellsHelper sumCells = null;
+    private SumCellsHelper sumCells;
 
     private static readonly Regex optionsRegex = new(@"(\d+);[rR](\d+)[cC](\d+);([UD][LR])");
 
@@ -66,7 +66,7 @@ public class LittleKillerConstraint : Constraint
             throw new ArgumentException($"Little Killer options \"{options}\" invalid. Starting cell is invalid.");
         }
 
-        cells = new HashSet<(int, int)>();
+        cells = [];
         (int, int) cell = cellStart;
         while (cell.Item1 >= 0 && cell.Item1 < HEIGHT && cell.Item2 >= 0 && cell.Item2 < WIDTH)
         {

@@ -7,11 +7,11 @@ public class SandwichConstraint : Constraint
     public readonly (int, int) cellStart;
     private readonly List<(int, int)> cells;
     private readonly HashSet<(int, int)> cellsLookup;
-    private int minFillingLength = 0;
-    private int maxFillingLength = 0;
-    private readonly uint crustsMask = 0;
-    private readonly uint nonCrustsMask = 0;
-    private uint fillingMask = 0;
+    private int minFillingLength;
+    private int maxFillingLength;
+    private readonly uint crustsMask;
+    private readonly uint nonCrustsMask;
+    private uint fillingMask;
     private readonly string specificName;
 
     public override string SpecificName => specificName;
@@ -36,7 +36,7 @@ public class SandwichConstraint : Constraint
             throw new ArgumentException($"Sandwich options \"{options}\" has invalid location.");
         }
 
-        cells = new();
+        cells = [];
         if (isRow)
         {
             int i = cellStart.Item1;
@@ -252,7 +252,7 @@ public class SandwichConstraint : Constraint
             }
 
             int knownSum = 0;
-            List<(int, int)> unsetCells = new();
+            List<(int, int)> unsetCells = [];
             for (int cellIndex = crustIndex0 + 1; cellIndex < crustIndex1; cellIndex++)
             {
                 var (i, j) = cells[cellIndex];
@@ -365,8 +365,8 @@ public class SandwichConstraint : Constraint
                     else
                     {
                         int knownSum = 0;
-                        List<int> unsetCellIndices = new();
-                        List<(int, int)> unsetCells = new();
+                        List<int> unsetCellIndices = [];
+                        List<(int, int)> unsetCells = [];
                         for (int cellIndex = curCrustIndex0 + 1; cellIndex < curCrustIndex1; cellIndex++)
                         {
                             var (i, j) = cells[cellIndex];
@@ -490,8 +490,8 @@ public class SandwichConstraint : Constraint
                     else
                     {
                         int knownSum = 0;
-                        List<int> unsetCellIndices = new();
-                        List<(int, int)> unsetCells = new();
+                        List<int> unsetCellIndices = [];
+                        List<(int, int)> unsetCells = [];
                         for (int cellIndex = curCrustIndex0 + 1; cellIndex < curCrustIndex1; cellIndex++)
                         {
                             var (i, j) = cells[cellIndex];

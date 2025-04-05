@@ -9,7 +9,7 @@ public class ChessConstraint : Constraint
 
     public ChessConstraint(Solver sudokuSolver, string options) : base(sudokuSolver, options)
     {
-        offsets = new();
+        offsets = [];
         values = ALL_VALUES_MASK;
         bool valuesCleared = false;
 
@@ -19,8 +19,8 @@ public class ChessConstraint : Constraint
             throw new ArgumentException("Chess Constraint: At least one symmetric offset is required.");
         }
 
-        List<(int, int)> cells = new();
-        HashSet<(int, int)> offsetHash = new();
+        List<(int, int)> cells = [];
+        HashSet<(int, int)> offsetHash = [];
         foreach (string param in split)
         {
             if (param.Length == 0)

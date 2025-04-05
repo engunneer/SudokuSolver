@@ -28,7 +28,7 @@ public abstract class Constraint(Solver sudokuSolver, string options)
     /// Split the constraint to a set of smaller constraints that are together identical to the current one.
     /// </summary>
     /// <returns>A set of elementary constraints that represent the current constraint when united.</returns>
-    public virtual IEnumerable<Constraint> SplitToPrimitives(Solver sudokuSolver) => new Constraint[] { this };
+    public virtual IEnumerable<Constraint> SplitToPrimitives(Solver sudokuSolver) => [this];
 
     /// <summary>
     /// Return an enumerable of cells which cannot be the same digit as this cell.
@@ -37,7 +37,7 @@ public abstract class Constraint(Solver sudokuSolver, string options)
     /// </summary>
     /// <param name="cell">The cell which is seeing other cells.</param>
     /// <returns>All cells which are seen by this cell.</returns>
-    public virtual IEnumerable<(int, int)> SeenCells((int, int) cell) => Enumerable.Empty<(int, int)>();
+    public virtual IEnumerable<(int, int)> SeenCells((int, int) cell) => [];
 
     /// <summary>
     /// Return an enumerable of cells which cannot be the same digit as this cell when
@@ -112,7 +112,7 @@ public abstract class Constraint(Solver sudokuSolver, string options)
         var res = StepLogic(sudokuSolver, sb, isBruteForcing);
         if (res != LogicResult.None && (sb?.Length ?? 0) > 0)
         {
-            logicalStepDescription?.Add(new(sb.ToString(), Enumerable.Empty<int>(), Enumerable.Empty<int>()));
+            logicalStepDescription?.Add(new(sb.ToString(), [], []));
         }
         return res;
     }
@@ -156,7 +156,7 @@ public abstract class Constraint(Solver sudokuSolver, string options)
                 continue;
             }
 
-            result ??= new();
+            result ??= [];
             result.Add((i, j));
         }
 
@@ -194,11 +194,13 @@ public abstract class Constraint(Solver sudokuSolver, string options)
     /// get eliminated.
     /// </summary>
     /// <param name="solver">The solver.</param>
+    /// <param name="cellsEnum"></param>
+    /// <param name="logicalStepDescription">Get a full description of all logical steps taken.</param>
     protected LogicResult InitLinksByRunningLogic(Solver solver, IEnumerable<(int, int)> cellsEnum, List<LogicalStepDesc> logicalStepDescription)
     {
         bool invalid = false;
         List<int> elims = null;
-        List<(int, int)> cells = cellsEnum as List<(int, int)> ?? new(cellsEnum);
+        List<(int, int)> cells = cellsEnum as List<(int, int)> ?? [..cellsEnum];
         var origBoard = solver.Board;
         foreach (var (i, j) in cells)
         {
@@ -225,7 +227,7 @@ public abstract class Constraint(Solver sudokuSolver, string options)
                     {
                         invalid = true;
                     }
-                    elims ??= new();
+                    elims ??= [];
                     elims.Add(CandidateIndex(i, j, v));
                     continue;
                 }
@@ -242,7 +244,7 @@ public abstract class Constraint(Solver sudokuSolver, string options)
                     {
                         invalid = true;
                     }
-                    elims ??= new();
+                    elims ??= [];
                     elims.Add(CandidateIndex(i, j, v));
                     continue;
                 }
@@ -279,7 +281,7 @@ public abstract class Constraint(Solver sudokuSolver, string options)
         {
             logicalStepDescription.Add(new LogicalStepDesc(
                 desc: $"[{SpecificName}] Re-evaluated => {solver.DescribeElims(elims)}",
-                sourceCandidates: Enumerable.Empty<int>(),
+                sourceCandidates: [],
                 elimCandidates: elims));
         }
 
@@ -312,7 +314,7 @@ public abstract class Constraint(Solver sudokuSolver, string options)
 
     public List<List<(int, int)>> ParseCells(string cellString)
     {
-        List<List<(int, int)>> cellGroups = new();
+        List<List<(int, int)>> cellGroups = [];
         foreach (string cellGroup in cellString.Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
         {
             if (cellGroup.Length < 4 || (cellGroup[0] != 'r' && cellGroup[0] != 'R'))
@@ -320,10 +322,10 @@ public abstract class Constraint(Solver sudokuSolver, string options)
                 throw new ArgumentException($"{cellGroup} is not a valid cell specifier.");
             }
 
-            List<(int, int)> cells = new();
+            List<(int, int)> cells = [];
 
-            List<int> rows = new();
-            List<int> cols = new();
+            List<int> rows = [];
+            List<int> cols = [];
             bool addingRows = true;
             bool valueStart = true;
             bool lastAddedDirections = false;
@@ -425,7 +427,7 @@ public abstract class Constraint(Solver sudokuSolver, string options)
                     }
                     i--;
                 }
-                else if (curChar >= '0' && curChar <= '9')
+                else if (curChar is >= '0' and <= '9')
                 {
                     if (valueStart)
                     {

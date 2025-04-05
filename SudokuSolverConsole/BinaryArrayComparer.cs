@@ -13,9 +13,9 @@ public class ByteArrayComparer : IEqualityComparer<byte[]>
             const int p = 16777619;
             int hash = (int)2166136261;
 
-            for (int i = 0; i < data.Length; i++)
+            foreach (var b in data)
             {
-                hash = (hash ^ data[i]) * p;
+                hash = (hash ^ b) * p;
             }
 
             hash += hash << 13;

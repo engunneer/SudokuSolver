@@ -176,7 +176,7 @@ public class DiagonalNonconsecutiveConstraint(Solver sudokuSolver, string option
                         valInstances[numValInstances++] = cell;
                     }
                 }
-                if (numValInstances >= 2 && numValInstances <= 5)
+                if (numValInstances is >= 2 and <= 5)
                 {
                     bool tooFar = false;
                     var firstCell = valInstances[0];

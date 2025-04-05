@@ -126,7 +126,7 @@ public class SumGroup
         }
 
         int max = min;
-        List<(List<int> combination, int sum)> potentialCombinations = new();
+        List<(List<int> combination, int sum)> potentialCombinations = [];
         foreach (var combination in possibleVals.Combinations(unsetCells.Count))
         {
             int curSum = setSum + combination.Sum();
@@ -372,13 +372,13 @@ public class SumGroup
         int numUnsetCells = unsetCells.Count;
         if (numUnsetCells == 0)
         {
-            return new List<int>() { setSum };
+            return [setSum];
         }
 
         // With one unset cell remaining, it just contributes its own sum
         if (numUnsetCells == 1)
         {
-            List<int> sums = new();
+            List<int> sums = [];
             var unsetCell = unsetCells[0];
             uint curMask = board[unsetCell.Item1, unsetCell.Item2];
             for (int v = 1; v <= MAX_VALUE; v++)
@@ -390,8 +390,6 @@ public class SumGroup
             }
             return sums;
         }
-
-        uint[] newMasks;
 
         // Check for a memo
         string memoKey = new StringBuilder()
@@ -405,18 +403,18 @@ public class SumGroup
             return memoData.Sums.ToList();
         }
 
-        SortedSet<int> sumsSet = new();
+        SortedSet<int> sumsSet = [];
         uint unsetMask = UnsetMask(solver);
         if (ValueCount(unsetMask) < unsetCells.Count)
         {
-            return new();
+            return [];
         }
 
         int minValue = MinValue(unsetMask);
         int maxValue = MaxValue(unsetMask);
         List<int> possibleVals = Enumerable.Range(minValue, maxValue).Where(v => HasValue(unsetMask, v)).ToList();
 
-        newMasks = new uint[numUnsetCells];
+        uint[] newMasks = new uint[numUnsetCells];
         foreach (var combination in possibleVals.Combinations(unsetCells.Count))
         {
             int curSum = setSum + combination.Sum();
@@ -485,8 +483,6 @@ public class SumGroup
             return valueNeeded >= 1 && valueNeeded <= MAX_VALUE && HasValue(curMask, valueNeeded);
         }
 
-        uint[] newMasks;
-
         // Check for a memo
         string memoKey = new StringBuilder()
             .Append(cellsString)
@@ -510,7 +506,7 @@ public class SumGroup
         int maxValue = MaxValue(unsetMask);
         List<int> possibleVals = Enumerable.Range(minValue, maxValue).Where(v => HasValue(unsetMask, v)).ToList();
 
-        newMasks = new uint[numUnsetCells];
+        uint[] newMasks = new uint[numUnsetCells];
         foreach (var combination in possibleVals.Combinations(unsetCells.Count))
         {
             if (setSum + combination.Sum() == sum)

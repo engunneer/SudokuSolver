@@ -19,8 +19,8 @@ public class DisjointConstraintGroup : IConstraintGroup
 [Constraint(DisplayName = "Disjoint Group", ConsoleName = "disjointoffset")]
 public class DisjointGroupConstraint : Constraint
 {
-    private readonly int groupIndex = 0;
-    private readonly List<(int, int)> group = new();
+    private readonly int groupIndex;
+    private readonly List<(int, int)> group = [];
 
     public DisjointGroupConstraint(Solver sudokuSolver, string options) : base(sudokuSolver, options)
     {

@@ -170,10 +170,7 @@ public class WhispersConstraint : Constraint
                 }
                 if (clearResult == LogicResult.Changed)
                 {
-                    if (clearedMasks == null)
-                    {
-                        clearedMasks = new uint[cells.Count];
-                    }
+                    clearedMasks ??= new uint[cells.Count];
                     clearedMasks[ti] |= clearMask;
                     curMask = board[curCell.Item1, curCell.Item2] & ~valueSetMask;
                     changed = true;
@@ -201,10 +198,7 @@ public class WhispersConstraint : Constraint
                         {
                             if (sudokuSolver.ClearValue(curCell.Item1, curCell.Item2, v))
                             {
-                                if (clearedMasks == null)
-                                {
-                                    clearedMasks = new uint[cells.Count];
-                                }
+                                clearedMasks ??= new uint[cells.Count];
                                 clearedMasks[ti] |= valueMask;
                                 changed = true;
                             }
@@ -273,7 +267,7 @@ public class WhispersConstraint : Constraint
         List<WhispersConstraint> constraints = new(cells.Count - 1);
         for (int i = 0; i < cells.Count - 1; i++)
         {
-            List<(int, int)> cellsPair = new() { cells[i], cells[i + 1] };
+            List<(int, int)> cellsPair = [cells[i], cells[i + 1]];
             cellsPair.Sort();
             constraints.Add(new(sudokuSolver, cellsPair, difference));
         }

@@ -23,7 +23,7 @@ public sealed record SudokuGroup(GroupType GroupType, string Name, List<(int, in
         }
 
         var mustContain = FromConstraint?.CellsMustContain(solver, val);
-        return mustContain != null && mustContain.Count > 0;
+        return mustContain is { Count: > 0 };
     }
 
     public List<(int, int)> CellsMustContain(Solver solver, int val)
@@ -110,13 +110,13 @@ public class Solver
     public string Title { get; init; }
     public string Author { get; init; }
     public string Rules { get; init; }
-    public bool DisableTuples { get; set; } = false;
-    public bool DisablePointing { get; set; } = false;
-    public bool DisableFishes { get; set; } = false;
-    public bool DisableWings { get; set; } = false;
-    public bool DisableAIC { get; set; } = false;
-    public bool DisableContradictions { get; set; } = false;
-    public bool DisableFindShortestContradiction { get; set; } = false;
+    public bool DisableTuples { get; set; }
+    public bool DisablePointing { get; set; }
+    public bool DisableFishes { get; set; }
+    public bool DisableWings { get; set; }
+    public bool DisableAIC { get; set; }
+    public bool DisableContradictions { get; set; }
+    public bool DisableFindShortestContradiction { get; set; }
     public uint DisabledLogicFlags
     {
         get
@@ -160,9 +160,9 @@ public class Solver
     }
 
     private uint[,] board;
-    private int[,] regions = null;
+    private int[,] regions;
     private SortedSet<int>[] weakLinks;
-    private int totalWeakLinks = 0;
+    private int totalWeakLinks;
     private SortedSet<int>[] CloneWeakLinks()
     {
         SortedSet<int>[] newWeakLinks = new SortedSet<int>[NUM_CANDIDATES];
@@ -205,7 +205,7 @@ public class Solver
     // Returns whether two cells cannot be the same value for a specific value
     // i0, j0, i1, j0, value or 0 for any value
     private bool[,,,,] seenMap;
-    private bool isInSetValue = false;
+    private bool isInSetValue;
     public uint[] FlatBoard
     {
         get
@@ -333,7 +333,7 @@ public class Solver
     /// Will also contain any groups from constraints (such as killer cages).
     /// </summary>
     public List<SudokuGroup> Groups { get; }
-    private List<SudokuGroup> smallGroupsBySize = null;
+    private List<SudokuGroup> smallGroupsBySize;
 
     /// <summary>
     /// Maps a cell to the list of groups which contain that cell.
@@ -363,7 +363,7 @@ public class Solver
 
     public IEnumerable<T> Constraints<T>() where T : Constraint => constraints.Select(c => c as T).Where(c => c != null);
 
-    private bool isBruteForcing = false;
+    private bool isBruteForcing;
 
     public Solver(int width, int height, int maxValue)
     {
@@ -384,7 +384,7 @@ public class Solver
         InitCombinations();
 
         board = new uint[HEIGHT, WIDTH];
-        constraints = new();
+        constraints = [];
 
         for (int i = 0; i < HEIGHT; i++)
         {
@@ -393,13 +393,13 @@ public class Solver
                 board[i, j] = ALL_VALUES_MASK;
             }
         }
-        Groups = new();
+        Groups = [];
         CellToGroupMap = new();
 
         weakLinks = new SortedSet<int>[NUM_CANDIDATES];
         for (int ci = 0; ci < NUM_CANDIDATES; ci++)
         {
-            weakLinks[ci] = new();
+            weakLinks[ci] = [];
         }
     }
 
@@ -657,10 +657,7 @@ public class Solver
             timers["FindSimpleContradictions"] = new();
         }
 #endif
-        if (regions == null)
-        {
-            regions = DefaultRegions(WIDTH);
-        }
+        regions ??= DefaultRegions(WIDTH);
 
         InitStandardGroups();
 
@@ -792,7 +789,7 @@ public class Solver
         {
             if (!CellToGroupMap.TryGetValue(cell, out var groupList) || groupList.Count == 0)
             {
-                return new HashSet<(int, int)>();
+                return [];
             }
 
             HashSet<(int, int)> curSeen = new(groupList.First().Cells);
@@ -822,7 +819,7 @@ public class Solver
                 result.Remove(cell);
             }
         }
-        return result ?? new HashSet<(int, int)>();
+        return result ?? [];
     }
 
     /// <summary>
@@ -838,7 +835,7 @@ public class Solver
         {
             if (!CellToGroupMap.TryGetValue(cell, out var groupList) || groupList.Count == 0)
             {
-                return new HashSet<(int, int)>();
+                return [];
             }
 
             HashSet<(int, int)> curSeen = new(groupList.First().Cells);
@@ -868,7 +865,7 @@ public class Solver
                 result.Remove(cell);
             }
         }
-        return result ?? new HashSet<(int, int)>();
+        return result ?? [];
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -946,7 +943,7 @@ public class Solver
 
     public List<List<(int, int)>> SplitIntoGroups(IEnumerable<(int, int)> cellsEnumerable)
     {
-        List<List<(int, int)>> groups = new();
+        List<List<(int, int)>> groups = [];
 
         var cells = cellsEnumerable.ToList();
         if (cells.Count == 0)
@@ -979,7 +976,7 @@ public class Solver
 
         foreach (var cell in cells)
         {
-            groups.Add(new List<(int, int)>() { cell });
+            groups.Add([cell]);
         }
         return groups;
     }
@@ -1407,7 +1404,7 @@ public class Solver
         }
 
         int[] connectionCount = new int[numCells];
-        HashSet<(int, int)> connections = new();
+        HashSet<(int, int)> connections = [];
         for (int i0 = 0; i0 < numCells - 1; i0++)
         {
             var curCell = cellList[i0];
@@ -1552,12 +1549,12 @@ public class Solver
     private class FindSolutionState : IDisposable
     {
         public CountdownEvent countdownEvent = new(1);
-        public uint[,] result = null;
+        public uint[,] result;
         public CancellationToken cancellationToken;
         public object locker = new();
-        public bool isRandom = false;
+        public bool isRandom;
 
-        private int numRunningTasks = 0;
+        private int numRunningTasks;
         private readonly Stack<Solver> pendingSolvers = new();
         private readonly int maxRunningTasks;
 
@@ -1610,10 +1607,7 @@ public class Solver
         {
             lock (locker)
             {
-                if (result == null)
-                {
-                    result = solver.Board;
-                }
+                result ??= solver.Board;
             }
         }
 
@@ -1713,7 +1707,7 @@ public class Solver
 
     private class CountSolutionsState : IDisposable
     {
-        public ulong numSolutions = 0;
+        public ulong numSolutions;
         public readonly bool multiThread;
         public readonly ulong maxSolutions;
         public readonly Action<ulong> progressEvent;
@@ -1725,7 +1719,7 @@ public class Solver
         private readonly object solutionLock = new();
         private readonly Stopwatch eventTimer;
 
-        private int numRunningTasks = 0;
+        private int numRunningTasks;
         private readonly Stack<Solver> pendingSolvers;
         private readonly int maxRunningTasks;
         private readonly bool fastIncrement;
@@ -1961,7 +1955,7 @@ public class Solver
 
         public readonly CancellationToken cancellationToken;
         public readonly bool multiThread;
-        public bool boardInvalid = false;
+        public bool boardInvalid;
 
         public FillRealCandidatesState(bool multiThread, int numCells, Action<uint[]> progressEvent, int[] numSolutions, CancellationToken cancellationToken)
         {
@@ -2411,22 +2405,18 @@ public class Solver
 #if PROFILING
             timers[constraintName].Stop();
 #endif
-            if (result != LogicResult.None)
+            if (result == LogicResult.None) 
+                continue;
+
+            if (logicalStepDescs is { Count: > 0 })
             {
-                if (logicalStepDescs != null && logicalStepDescs.Count > 0)
-                {
-                    logicalStepDescs[^1] = logicalStepDescs[^1].WithPrefix($"[{constraint.SpecificName}] ");
-                }
-                else if (logicalStepDescs != null && logicalStepDescs.Count == 0)
-                {
-                    logicalStepDescs.Add(new(
-                        $"{constraint.SpecificName} reported the board was invalid without specifying why. This is a bug: please report it!",
-                        Enumerable.Empty<int>(),
-                        Enumerable.Empty<int>()
-                    ));
-                }
-                return result;
+                logicalStepDescs[^1] = logicalStepDescs[^1].WithPrefix($"[{constraint.SpecificName}] ");
             }
+            else if (logicalStepDescs is { Count: 0 })
+            {
+                logicalStepDescs.Add(new($"{constraint.SpecificName} reported the board was invalid without specifying why. This is a bug: please report it!", [], []));
+            }
+            return result;
         }
 
         if (isBruteForcing)
@@ -2757,7 +2747,7 @@ public class Solver
                         if ((exactlyOnce & v) != 0)
                         {
                             List<(int, int)> cellsMustContain = group.FromConstraint?.CellsMustContain(this, val);
-                            if (cellsMustContain != null && cellsMustContain.Count == 1)
+                            if (cellsMustContain is { Count: 1 })
                             {
                                 val = v;
                                 vali = cellsMustContain[0].Item1;
@@ -2785,7 +2775,7 @@ public class Solver
 
     private LogicResult FindDirectCellForcing(List<LogicalStepDesc> logicalStepDescs)
     {
-        SortedSet<int> elimSet = new();
+        SortedSet<int> elimSet = [];
         for (int i = 0; i < HEIGHT; i++)
         {
             for (int j = 0; j < WIDTH; j++)
@@ -2828,7 +2818,7 @@ public class Solver
                     List<int> elims = elimSet.Where(IsCandIndexValid).ToList();
                     if (elims.Count > 0)
                     {
-                        List<(int, int)> sourceCell = new() { (i, j) };
+                        List<(int, int)> sourceCell = [(i, j)];
                         logicalStepDescs?.Add(new(
                             desc: $"Direct Cell Forcing: {CompactName(mask, sourceCell)} => {DescribeElims(elims)}",
                             sourceCandidates: CandidateIndexes(mask, sourceCell),
@@ -3046,7 +3036,7 @@ public class Solver
 
     private LogicResult FindUnorthodoxTuple(List<LogicalStepDesc> logicalStepDescs, int tupleSize)
     {
-        List<(int, int)> candidateCells = new();
+        List<(int, int)> candidateCells = [];
         for (int i = 0; i < HEIGHT; i++)
         {
             for (int j = 0; j < WIDTH; j++)
@@ -3092,9 +3082,8 @@ public class Solver
                 if ((valuesMask & valueMask) != 0)
                 {
                     int numWithCandidate = 0;
-                    for (int k = 0; k < tupleCells.Count; k++)
+                    foreach (var (i, j) in tupleCells)
                     {
-                        var (i, j) = tupleCells[k];
                         if ((board[i, j] & valueMask) != 0)
                         {
                             numWithCandidate++;
@@ -3134,7 +3123,7 @@ public class Solver
             {
                 // All candidates in this tuple must be present, so we can eliminate based on each value
                 var elims = CalcElims(accumMask, tupleCells);
-                if (elims != null && elims.Count > 0)
+                if (elims is { Count: > 0 })
                 {
                     if (logicalStepDescs != null)
                     {
@@ -3304,14 +3293,14 @@ public class Solver
                                     {
                                         if ((elimMask & (1u << i)) != 0)
                                         {
-                                            elims ??= new();
+                                            elims ??= [];
                                             elims.Add(CandidateIndex(rowOrCol == 0 ? (i, j) : (j, i), value));
                                         }
                                     }
                                 }
                             }
 
-                            if (elims != null && elims.Count > 0)
+                            if (elims is { Count: > 0 })
                             {
                                 string techniqueName = tupleSize switch
                                 {
@@ -3321,7 +3310,7 @@ public class Solver
                                     _ => $"{tupleSize}-Fish",
                                 };
 
-                                List<(int, int)> fishCells = new();
+                                List<(int, int)> fishCells = [];
                                 foreach (int j in tupleRowOrCols)
                                 {
                                     uint mask = indexByValue[valueIndex, j];
@@ -3386,7 +3375,7 @@ public class Solver
                             tupleMask |= indexByValue[valueIndex, j];
                         }
 
-                        List<int> nonTupleRowOrCols = new();
+                        List<int> nonTupleRowOrCols = [];
                         for (int j = 0; j < MAX_VALUE; j++)
                         {
                             if (!tupleRowOrCols.Contains(j))
@@ -3426,7 +3415,7 @@ public class Solver
                                         {
                                             if ((elimMask & (1u << i)) != 0)
                                             {
-                                                elims ??= new();
+                                                elims ??= [];
                                                 elims.Add(CandidateIndex(rowOrCol == 0 ? (i, j) : (j, i), value));
                                             }
                                         }
@@ -3458,7 +3447,7 @@ public class Solver
                                     }
                                 }
 
-                                if (elims != null && elims.Count > 0)
+                                if (elims is { Count: > 0 })
                                 {
                                     string techniqueName = tupleSize switch
                                     {
@@ -3468,7 +3457,7 @@ public class Solver
                                         _ => $"{tupleSize}-Fish",
                                     };
 
-                                    List<(int, int)> fishCells = new();
+                                    List<(int, int)> fishCells = [];
                                     foreach (int j in tupleRowOrCols)
                                     {
                                         uint mask = indexByValue[valueIndex, j];
@@ -3512,7 +3501,7 @@ public class Solver
         // A y-wing always involves three bivalue cells.
         // The three cells have 3 candidates between them, and one cell called the "pivot" sees the other two "pincers".
         // A strong link is formed between the common candidate between the two "pincer" cells.
-        List<(int, int)> candidateCells = new();
+        List<(int, int)> candidateCells = [];
         for (int i = 0; i < HEIGHT; i++)
         {
             for (int j = 0; j < WIDTH; j++)
@@ -3587,7 +3576,7 @@ public class Solver
                         }
                         if (elims.Count > 0)
                         {
-                            List<(int, int)> cells = new() { (i0, j0), (i1, j1), (i2, j2) };
+                            List<(int, int)> cells = [(i0, j0), (i1, j1), (i2, j2)];
                             logicalStepDescs?.Add(new(
                                     desc: $"Y-Wing: {MaskToString(combinedMask)} in {CompactName(cells)} => {DescribeElims(elims)}",
                                     sourceCandidates: CandidateIndexes(combinedMask, cells),
@@ -3658,7 +3647,7 @@ public class Solver
 
     private LogicResult FindNWing(List<LogicalStepDesc> logicalStepDescs, int wingSize)
     {
-        List<(int, int)> candidateCells = new();
+        List<(int, int)> candidateCells = [];
         for (int i = 0; i < HEIGHT; i++)
         {
             for (int j = 0; j < WIDTH; j++)
@@ -3706,9 +3695,8 @@ public class Solver
                 if ((valuesMask & valueMask) != 0)
                 {
                     int numWithCandidate = 0;
-                    for (int k = 0; k < wingCells.Count; k++)
+                    foreach (var (i, j) in wingCells)
                     {
-                        var (i, j) = wingCells[k];
                         if ((board[i, j] & valueMask) != 0)
                         {
                             numWithCandidate++;
@@ -3761,7 +3749,7 @@ public class Solver
             {
                 // At least one of the ungrouped candidates is true, so eliminate any candidates with a weak link to all of them.
                 var elims = CalcElims(ValueMask(ungroupedValue), wingCells);
-                if (elims != null && elims.Count > 0)
+                if (elims is { Count: > 0 })
                 {
                     if (logicalStepDescs != null)
                     {
@@ -3883,7 +3871,7 @@ public class Solver
         List<int>[] colsPerRow = new List<int>[HEIGHT];
         for (int i = 0; i < HEIGHT; i++)
         {
-            colsPerRow[i] = new();
+            colsPerRow[i] = [];
         }
         foreach (var cell in cells)
         {
@@ -3894,7 +3882,7 @@ public class Solver
             colsPerRow[i].Sort();
         }
 
-        List<string> groups = new();
+        List<string> groups = [];
         for (int i = 0; i < HEIGHT; i++)
         {
             if (colsPerRow[i].Count == 0)
@@ -3902,7 +3890,7 @@ public class Solver
                 continue;
             }
 
-            List<int> rowsInGroup = new() { i + 1 };
+            List<int> rowsInGroup = [i + 1];
             for (int j = i + 1; j < HEIGHT; j++)
             {
                 if (colsPerRow[j].SequenceEqual(colsPerRow[i]))
@@ -4024,7 +4012,7 @@ public class Solver
                 for (int v = 1; v <= MAX_VALUE; v++)
                 {
                     var cells = group.FromConstraint.CellsMustContain(this, v);
-                    if (cells != null && cells.Count == 2)
+                    if (cells is { Count: 2 })
                     {
                         int cand0 = CandidateIndex(cells[0], v);
                         int cand1 = CandidateIndex(cells[1], v);
@@ -4063,7 +4051,7 @@ public class Solver
                     List<int>[] candIndexPerValue = new List<int>[MAX_VALUE];
                     for (int v = 1; v <= MAX_VALUE; v++)
                     {
-                        candIndexPerValue[v - 1] = new();
+                        candIndexPerValue[v - 1] = [];
                     }
                     foreach (var (i, j) in combination)
                     {
@@ -4078,7 +4066,7 @@ public class Solver
                         }
                     }
 
-                    List<int> singleValues = new();
+                    List<int> singleValues = [];
                     for (int v = 1; v <= MAX_VALUE; v++)
                     {
                         if (candIndexPerValue[v - 1].Count == 1)
@@ -4129,7 +4117,7 @@ public class Solver
 
     internal List<int> CandidateIndexes(uint valueMask, IEnumerable<(int, int)> cells)
     {
-        List<int> result = new();
+        List<int> result = [];
         foreach (var cell in cells)
         {
             uint mask = board[cell.Item1, cell.Item2] & valueMask;
@@ -4247,15 +4235,15 @@ public class Solver
         foreach (int elimCandIndex in elims)
         {
             var (i, j, v) = CandIndexToCoord(elimCandIndex);
-            elimsByVal[v - 1] ??= new();
+            elimsByVal[v - 1] ??= [];
             elimsByVal[v - 1].Add((i, j));
         }
 
-        List<(List<int>, string)> elimDescs = new();
+        List<(List<int>, string)> elimDescs = [];
         for (int v = 1; v <= MAX_VALUE; v++)
         {
             var elimCells = elimsByVal[v - 1];
-            if (elimCells != null && elimCells.Count > 0)
+            if (elimCells is { Count: > 0 })
             {
                 elimCells.Sort();
                 elimDescs.Add(([v], CompactName(elimCells)));
@@ -4328,7 +4316,7 @@ public class Solver
                                 {
                                     logicalStepDescs?.Add(new(
                                         desc: $"If {CellName(i, j)} is set to {v} then {violationString} => -{v}{CellName(i, j)}",
-                                        sourceCandidates: Enumerable.Empty<int>(),
+                                        sourceCandidates: [],
                                         elimCandidates: CandidateIndex((i, j), v).ToEnumerable(),
                                         subSteps: null
                                     ));
@@ -4341,13 +4329,13 @@ public class Solver
 
                                 if (boardCopy.ConsolidateBoard(contradictionSteps) == LogicResult.Invalid)
                                 {
-                                    bool isTrivial = contradictionSteps != null && contradictionSteps.Count == 0;
+                                    bool isTrivial = contradictionSteps is { Count: 0 };
                                     if (isTrivial)
                                     {
                                         contradictionSteps.Add(new LogicalStepDesc(
                                             desc: "For unknown reasons. This is a bug: please report this!",
-                                            sourceCandidates: Enumerable.Empty<int>(),
-                                            elimCandidates: Enumerable.Empty<int>()));
+                                            sourceCandidates: [],
+                                            elimCandidates: []));
                                     }
 
                                     // Trivial contradictions will always be as "easy" or "easier" than any other contradiction.
@@ -4355,7 +4343,7 @@ public class Solver
                                     {
                                         logicalStepDescs?.Add(new(
                                             desc: $"Setting {CellName(i, j)} to {v} causes a contradiction:",
-                                            sourceCandidates: Enumerable.Empty<int>(),
+                                            sourceCandidates: [],
                                             elimCandidates: CandidateIndex((i, j), v).ToEnumerable(),
                                             subSteps: contradictionSteps
                                         ));
@@ -4387,7 +4375,7 @@ public class Solver
 
                 logicalStepDescs?.Add(new(
                     desc: $"Setting {CellName(contradiction.I, contradiction.J)} to {contradiction.V} causes a contradiction:",
-                    sourceCandidates: Enumerable.Empty<int>(),
+                    sourceCandidates: [],
                     elimCandidates: CandidateIndex((contradiction.I, contradiction.J), contradiction.V).ToEnumerable(),
                     subSteps: contradiction.ContradictionSteps
                 ));

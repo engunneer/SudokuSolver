@@ -25,9 +25,9 @@
                 return null;
             }
 
-            List<(int, int)> circleCells = new() { lineCells[0], lineCells[^1] };
+            List<(int, int)> circleCells = [lineCells[0], lineCells[^1]];
             List<(int, int)> betweenCells = lineCells.Skip(1).Take(lineCells.Count - 2).ToList();
-            return new() { circleCells, betweenCells };
+            return [circleCells, betweenCells];
         }
     }
 }

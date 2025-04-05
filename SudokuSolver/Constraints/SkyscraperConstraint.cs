@@ -33,7 +33,7 @@ public class SkyscraperConstraint : Constraint
             throw new ArgumentException($"Skyscraper options \"{options}\" has invalid location.");
         }
 
-        cells = new();
+        cells = [];
         if (isRow)
         {
             int i = cellStart.Item1;
@@ -305,7 +305,7 @@ public class SkyscraperConstraint : Constraint
             {
                 if (logicalStepDescription != null)
                 {
-                    elims ??= new();
+                    elims ??= [];
                     for (int v = 1; v <= MAX_VALUE; v++)
                     {
                         if (HasValue(elimMask, v))

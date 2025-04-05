@@ -17,44 +17,31 @@ class Message
 // If adding a new BaseResponse, be sure to also add it to:
 // - WebsocketsJsonContext
 // - SendMessage
-class BaseResponse
+class BaseResponse(int nonce, string type)
 {
-    public BaseResponse(int nonce, string type)
-    {
-        this.nonce = nonce;
-        this.type = type;
-    }
-
-    public int nonce { get; set; }
-    public string type { get; set; }
+    public int nonce { get; set; } = nonce;
+    public string type { get; set; } = type;
 }
 
-class CanceledResponse : BaseResponse
-{
-    public CanceledResponse(int nonce) : base(nonce, "canceled") { }
-}
+class CanceledResponse(int nonce) : BaseResponse(nonce, "canceled");
 
-class InvalidResponse : BaseResponse
+class InvalidResponse(int nonce) : BaseResponse(nonce, "invalid")
 {
-    public InvalidResponse(int nonce) : base(nonce, "invalid") { }
     public string message { get; set; }
 }
 
-class TrueCandidatesResponse : BaseResponse
+class TrueCandidatesResponse(int nonce) : BaseResponse(nonce, "truecandidates")
 {
-    public TrueCandidatesResponse(int nonce) : base(nonce, "truecandidates") { }
     public int[] solutionsPerCandidate { get; set; }
 }
 
-class SolvedResponse : BaseResponse
+class SolvedResponse(int nonce) : BaseResponse(nonce, "solved")
 {
-    public SolvedResponse(int nonce) : base(nonce, "solved") { }
     public int[] solution { get; set; }
 }
 
-class CountResponse : BaseResponse
+class CountResponse(int nonce) : BaseResponse(nonce, "count")
 {
-    public CountResponse(int nonce) : base(nonce, "count") { }
     public ulong count { get; set; }
     public bool inProgress { get; set; }
 }
@@ -71,9 +58,8 @@ class LogicalCell
     public int[] candidates { get; set; }
 }
 
-class LogicalResponse : BaseResponse
+class LogicalResponse(int nonce) : BaseResponse(nonce, "logical")
 {
-    public LogicalResponse(int nonce) : base(nonce, "logical") { }
     public LogicalCell[] cells { get; set; }
     public string message { get; set; }
     public bool isValid { get; set; }
@@ -96,7 +82,7 @@ class WebsocketListener : IDisposable
     private readonly object serverLock = new();
     private readonly Dictionary<string, CancellationTokenSource> cancellationTokenMap = new();
     private readonly Dictionary<byte[], BaseResponse> trueCandidatesResponseCache = new(new ByteArrayComparer());
-    private readonly List<ResponseCacheItem> lastTrueCandidatesResponses = new();
+    private readonly List<ResponseCacheItem> lastTrueCandidatesResponses = [];
     private List<string> additionalConstraints;
     private bool verboseLogs = false;
     private bool singleThreaded = false;
@@ -389,10 +375,7 @@ class WebsocketListener : IDisposable
             return;
         }
 
-        if (numSolutions == null)
-        {
-            numSolutions = new int[totalCandidates];
-        }
+        numSolutions ??= new int[totalCandidates];
 
         int maxValue = solver.MAX_VALUE;
         var realFlatBoard = solver.FlatBoard;
@@ -471,7 +454,7 @@ class WebsocketListener : IDisposable
 
     void SendSolvePath(string ipPort, int nonce, Solver solver)
     {
-        List<LogicalStepDesc> logicalStepDescs = new();
+        List<LogicalStepDesc> logicalStepDescs = [];
         var logicResult = solver.ConsolidateBoard(logicalStepDescs);
         SendLogicResponse(ipPort, nonce, solver, logicResult, StepsDescription(logicalStepDescs));
     }
@@ -498,7 +481,7 @@ class WebsocketListener : IDisposable
             }
         }
 
-        List<LogicalStepDesc> logicalStepDescs = new();
+        List<LogicalStepDesc> logicalStepDescs = [];
         var logicResult = solver.StepLogic(logicalStepDescs);
         SendLogicResponse(ipPort, nonce, solver, logicResult, StepsDescription(logicalStepDescs));
     }
@@ -530,7 +513,7 @@ class WebsocketListener : IDisposable
             }
             else
             {
-                List<int> candidates = new();
+                List<int> candidates = [];
                 for (int v = 1; v <= solver.MAX_VALUE; v++)
                 {
                     uint valueMask = SolverUtility.ValueMask(v);

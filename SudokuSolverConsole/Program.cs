@@ -7,12 +7,12 @@ namespace SudokuSolverConsole;
 
 class Program
 {
-	private static string descriptionString = $"Version {SudokuSolverVersion.version} created by David Clamage (\"Rangsk\").\n" +
-        "https://github.com/dclamage/SudokuSolver\n\n" +
-        "This is free, open source software and is supported by the community.\n" +
-        "Watch me on YouTube: https://youtube.com/rangsk\n" +
-        "Support me on Patreon: https://www.patreon.com/rangsk\n" +
-        "Buy me a Coffee: https://ko-fi.com/rangsk";
+	private static readonly string descriptionString = $"Version {SudokuSolverVersion.version} created by David Clamage (\"Rangsk\").\n" +
+                                                       "https://github.com/dclamage/SudokuSolver\n\n" +
+                                                       "This is free, open source software and is supported by the community.\n" +
+                                                       "Watch me on YouTube: https://youtube.com/rangsk\n" +
+                                                       "Support me on Patreon: https://www.patreon.com/rangsk\n" +
+                                                       "Buy me a Coffee: https://ko-fi.com/rangsk";
 
     public static async Task<int> Main(string[] args)
 	{
@@ -206,7 +206,7 @@ public required int Port { get; init; }
 
 		bool haveFPuzzlesURL = !string.IsNullOrWhiteSpace(FpuzzlesURL);
 		bool haveGivens = !string.IsNullOrWhiteSpace(Givens);
-		bool haveBlankGridSize = BlankGridSize >= 1 && BlankGridSize <= 31;
+		bool haveBlankGridSize = BlankGridSize is >= 1 and <= 31;
 		bool haveCandidates = !string.IsNullOrWhiteSpace(Candidates);
 		if (!haveFPuzzlesURL && !haveGivens && !haveBlankGridSize && !haveCandidates)
 		{
@@ -279,7 +279,7 @@ public required int Port { get; init; }
 		if (SolveLogically)
 		{
 			Console.WriteLine("Solving logically:");
-			List<LogicalStepDesc> logicalStepDescs = new();
+			List<LogicalStepDesc> logicalStepDescs = [];
 			var logicResult = solver.ConsolidateBoard(logicalStepDescs);
 			foreach (var step in logicalStepDescs)
 			{
@@ -295,8 +295,9 @@ public required int Port { get; init; }
 			{
 				try
 				{
-					using StreamWriter file = new(OutputPath);
-					await file.WriteLineAsync(solver.OutputString);
+                    await using StreamWriter file = new(OutputPath);
+					
+                    await file.WriteLineAsync(solver.OutputString);
 				}
 				catch (Exception e)
 				{
@@ -325,8 +326,9 @@ public required int Port { get; init; }
 				{
 					try
 					{
-						using StreamWriter file = new(OutputPath);
-						await file.WriteLineAsync(solver.OutputString);
+                        await using StreamWriter file = new(OutputPath);
+						
+                        await file.WriteLineAsync(solver.OutputString);
 					}
 					catch (Exception e)
 					{
@@ -356,8 +358,9 @@ public required int Port { get; init; }
 				{
 					try
 					{
-						using StreamWriter file = new(OutputPath);
-						await file.WriteLineAsync(solver.OutputString);
+                        await using StreamWriter file = new(OutputPath);
+						
+                        await file.WriteLineAsync(solver.OutputString);
 					}
 					catch (Exception e)
 					{
@@ -405,8 +408,9 @@ public required int Port { get; init; }
 				{
 					try
 					{
-						using StreamWriter file = new(OutputPath);
-						await file.WriteLineAsync(solver.OutputString);
+                        await using StreamWriter file = new(OutputPath);
+						
+                        await file.WriteLineAsync(solver.OutputString);
 					}
 					catch (Exception e)
 					{
@@ -428,8 +432,9 @@ public required int Port { get; init; }
 			try
 			{
 				Action<Solver> solutionEvent = null;
-				using StreamWriter file = (OutputPath != null) ? new(OutputPath) : null;
-				if (file != null)
+                await using StreamWriter file = (OutputPath != null) ? new(OutputPath) : null;
+				
+                if (file != null)
 				{
 					solutionEvent = (Solver solver) =>
 					{

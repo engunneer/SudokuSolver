@@ -74,11 +74,10 @@ public class KillerCageConstraint : Constraint
     public override IEnumerable<Constraint> SplitToPrimitives(Solver sudokuSolver)
     {
         // A killer cage with a sum clue is a union of two constraints:
-        List<KillerCageConstraint> constraints = new()
-        {
+        List<KillerCageConstraint> constraints = [
             // 1. Digits uniqueness inside the region (represented by a clueless cage with the same cells)
             new(sudokuSolver, cells)
-        };
+        ];
 
         if (sum != 0)
         {

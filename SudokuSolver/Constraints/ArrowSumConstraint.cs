@@ -7,9 +7,9 @@ public class ArrowSumConstraint : Constraint
     public readonly List<(int, int)> arrowCells;
     private readonly HashSet<(int, int)> allCells;
     private List<(int, int)> groupCells;
-    private bool isArrowGroup = false;
-    private bool isCircleGroup = false;
-    private bool isAllGrouped = false;
+    private bool isArrowGroup;
+    private bool isCircleGroup;
+    private bool isAllGrouped;
 
     public ArrowSumConstraint(Solver sudokuSolver, string options) : base(sudokuSolver, options)
     {
@@ -40,7 +40,7 @@ public class ArrowSumConstraint : Constraint
                 }
             }
         }
-        return Enumerable.Empty<(int, int)>();
+        return [];
     }
 
     public override string SpecificName => $"Arrow at {CellName(circleCells[0])}";
@@ -273,18 +273,18 @@ public class ArrowSumConstraint : Constraint
                 var curElims = sudokuSolver.CandidateIndexes(clearMask, (ai, aj).ToEnumerable());
                 if (curElims.Count != 0)
                 {
-                    elims ??= new();
+                    elims ??= [];
                     elims.AddRange(curElims);
                 }
             }
         }
 
-        if (elims != null && elims.Count > 0)
+        if (elims is { Count: > 0 })
         {
             bool invalid = !sudokuSolver.ClearCandidates(elims);
             logicalStepDescription?.Add(new(
                 desc: $"Impossible arrow cell value{(elims.Count > 1 ? "s" : "")} => {sudokuSolver.DescribeElims(elims)}",
-                sourceCandidates: Enumerable.Empty<int>(),
+                sourceCandidates: [],
                 elimCandidates: elims
             ));
             return invalid ? LogicResult.Invalid : LogicResult.Changed;
@@ -327,18 +327,18 @@ public class ArrowSumConstraint : Constraint
                 var curElims = sudokuSolver.CandidateIndexes(clearMask, circleCell.ToEnumerable());
                 if (curElims.Count != 0)
                 {
-                    elims ??= new();
+                    elims ??= [];
                     elims.AddRange(curElims);
                 }
             }
         }
 
-        if (elims != null && elims.Count > 0)
+        if (elims is { Count: > 0 })
         {
             bool invalid = !sudokuSolver.ClearCandidates(elims);
             logicalStepDescription?.Add(new(
                 desc: $"Impossible sum{(elims.Count > 1 ? "s" : "")} => {sudokuSolver.DescribeElims(elims)}",
-                sourceCandidates: Enumerable.Empty<int>(),
+                sourceCandidates: [],
                 elimCandidates: elims
             ));
             return invalid ? LogicResult.Invalid : LogicResult.Changed;
@@ -349,7 +349,7 @@ public class ArrowSumConstraint : Constraint
 
     private HashSet<int> PossibleArrowSums(Solver sudokuSolver)
     {
-        HashSet<int> possibleArrowSums = new();
+        HashSet<int> possibleArrowSums = [];
 
         var board = sudokuSolver.Board;
         if (!isArrowGroup)
@@ -382,7 +382,7 @@ public class ArrowSumConstraint : Constraint
         else
         {
             int baseSum = 0;
-            List<(int, int)> remainingArrowCells = new();
+            List<(int, int)> remainingArrowCells = [];
             uint allArrowMask = 0;
             foreach (var (ai, aj) in arrowCells)
             {
@@ -507,7 +507,7 @@ public class ArrowSumConstraint : Constraint
 
         if (cells == 1 && total <= maxValue)
         {
-            yield return new int[] { total };
+            yield return [total];
             yield break;
         }
 
@@ -604,7 +604,7 @@ public class ArrowSumConstraint : Constraint
         }
         else if (validArrangements.Count > 1)
         {
-            return AdjustCircleCandidatesFromPossibleSums(sudokuSolver, new HashSet<int>() { arrowSum }, logicalStepDescription);
+            return AdjustCircleCandidatesFromPossibleSums(sudokuSolver, [arrowSum], logicalStepDescription);
         }
 
         // Now we know there is exactly 1 valid arrangement of values in the circle cells.
@@ -647,9 +647,8 @@ public class ArrowSumConstraint : Constraint
         {
             int sumRemaining = sum;
             int numRemainingCells = 0;
-            for (int cellIndex = 0; cellIndex < arrowCells.Count; cellIndex++)
+            foreach (var (i, j) in arrowCells)
             {
-                var (i, j) = arrowCells[cellIndex];
                 uint arrowMask = board[i, j];
                 if (IsValueSet(arrowMask))
                 {
@@ -677,7 +676,7 @@ public class ArrowSumConstraint : Constraint
         {
             int sumRemaining = sum;
             uint allArrowMask = 0;
-            List<(int, int, int)> remainingArrowCells = new();
+            List<(int, int, int)> remainingArrowCells = [];
             for (int cellIndex = 0; cellIndex < arrowCells.Count; cellIndex++)
             {
                 var (i, j) = arrowCells[cellIndex];
@@ -774,17 +773,17 @@ public class ArrowSumConstraint : Constraint
             var curElims = sudokuSolver.CandidateIndexes(clearMask, (i, j).ToEnumerable());
             if (curElims.Count != 0)
             {
-                elims ??= new();
+                elims ??= [];
                 elims.AddRange(curElims);
             }
         }
 
-        if (elims != null && elims.Count > 0)
+        if (elims is { Count: > 0 })
         {
             bool invalid = !sudokuSolver.ClearCandidates(elims);
             logicalStepDescription?.Add(new(
                 desc: $"Circle value of {sum} => {sudokuSolver.DescribeElims(elims)}",
-                sourceCandidates: Enumerable.Empty<int>(),
+                sourceCandidates: [],
                 elimCandidates: elims
             ));
             return invalid ? LogicResult.Invalid : LogicResult.Changed;

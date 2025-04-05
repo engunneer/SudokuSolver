@@ -22,13 +22,13 @@ internal class AICSolver
     private readonly SortedSet<int>[] weakLinks;
 
     // Tracking the best result so far
-    private List<int> bestChain = null;
-    private List<int> bestChainElims = null;
-    private List<List<int>> bestChainForcingChains = null;
-    private int bestChainDifficulty = 0;
-    private int bestChainDirectSingles = 0;
-    private int bestChainSinglesAfterBasics = 0;
-    private string bestChainDescPrefix = null;
+    private List<int> bestChain;
+    private List<int> bestChainElims;
+    private List<List<int>> bestChainForcingChains;
+    private int bestChainDifficulty;
+    private int bestChainDirectSingles;
+    private int bestChainSinglesAfterBasics;
+    private string bestChainDescPrefix;
 
     // Discovered links
     private readonly Dictionary<int, StrongLinkDesc>[] strongLinks;
@@ -38,19 +38,13 @@ internal class AICSolver
     private readonly Dictionary<(int, int), List<int>> discoveredStrongLinks = new();
     // a - b = c: If a is true then c is true
     private readonly Dictionary<(int, int), List<int>> discoveredWeakToStrongLinks = new();
-    private SortedSet<int>[] discoveredWeakLinksLookup = null;
-    private SortedSet<int>[] discoveredWeakToStrongLinksLookup = null;
+    private SortedSet<int>[] discoveredWeakLinksLookup;
+    private SortedSet<int>[] discoveredWeakToStrongLinksLookup;
 
-    private readonly struct StrongLinkDesc
+    private readonly struct StrongLinkDesc(string humanDesc, IEnumerable<(int, int)> alsCells = null)
     {
-        public readonly string humanDesc;
-        public readonly List<(int, int)> alsCells;
-
-        public StrongLinkDesc(string humanDesc, IEnumerable<(int, int)> alsCells = null)
-        {
-            this.humanDesc = humanDesc;
-            this.alsCells = alsCells != null ? new(alsCells) : null;
-        }
+        public readonly string humanDesc = humanDesc;
+        public readonly List<(int, int)> alsCells = alsCells != null ? new(alsCells) : null;
 
         public static StrongLinkDesc Empty => new(string.Empty, null);
     }
@@ -82,7 +76,7 @@ internal class AICSolver
             {
                 if (IsCandIndexValid(cand1))
                 {
-                    discoveredWeakLinks.Add((cand0, cand1), new() { cand0, cand1 });
+                    discoveredWeakLinks.Add((cand0, cand1), [cand0, cand1]);
                 }
             }
 
@@ -90,7 +84,7 @@ internal class AICSolver
             {
                 if (IsCandIndexValid(cand1))
                 {
-                    discoveredStrongLinks.Add((cand0, cand1), new() { cand0, cand1 });
+                    discoveredStrongLinks.Add((cand0, cand1), [cand0, cand1]);
                 }
             }
         }
@@ -171,7 +165,7 @@ internal class AICSolver
         {
             if (IsCandIndexValid(candIndex) && strongLinks[candIndex].Count > 0)
             {
-                chainQueue.Enqueue(new() { candIndex });
+                chainQueue.Enqueue([candIndex]);
             }
         }
 
@@ -247,7 +241,7 @@ internal class AICSolver
                     uint elimMask = board[i, j] & ~ValueMask(v);
                     if (elimMask != 0)
                     {
-                        List<int> chainElims = new();
+                        List<int> chainElims = [];
                         int minVal = MinValue(elimMask);
                         int maxVal = MaxValue(elimMask);
                         for (int curVal = minVal; curVal <= maxVal; curVal++)
@@ -327,7 +321,7 @@ internal class AICSolver
                                 }
                             }
                         }
-                        chainQueue.Enqueue(new(newChain));
+                        chainQueue.Enqueue([..newChain]);
 
                         newChain[^1] = -1;
                     }
@@ -388,7 +382,7 @@ internal class AICSolver
             return false;
         }
 
-        int difficulty = forcingChains != null ? forcingChains.Sum(l => l.Count) : chain.Count;
+        int difficulty = forcingChains?.Sum(l => l.Count) ?? chain.Count;
         int numDirectSingles = directSinglesSolver.NumSetValues;
         int numSinglesAfterBasics = singlesAfterBasicsSolver.NumSetValues;
         (int, int, int, int) chainVals = (numSinglesAfterBasics, numDirectSingles, -difficulty, chainElims.Count);
@@ -499,7 +493,7 @@ internal class AICSolver
                 for (int v = 1; v <= MAX_VALUE; v++)
                 {
                     var cells = group.FromConstraint.CellsMustContain(solver, v);
-                    if (cells != null && cells.Count == 2)
+                    if (cells is { Count: 2 })
                     {
                         int cand0 = CandidateIndex(cells[0], v);
                         int cand1 = CandidateIndex(cells[1], v);
@@ -538,7 +532,7 @@ internal class AICSolver
                     List<int>[] candIndexPerValue = new List<int>[MAX_VALUE];
                     for (int v = 1; v <= MAX_VALUE; v++)
                     {
-                        candIndexPerValue[v - 1] = new();
+                        candIndexPerValue[v - 1] = [];
                     }
                     foreach (var (i, j) in combination)
                     {
@@ -553,7 +547,7 @@ internal class AICSolver
                         }
                     }
 
-                    List<int> singleValues = new();
+                    List<int> singleValues = [];
                     for (int v = 1; v <= MAX_VALUE; v++)
                     {
                         if (candIndexPerValue[v - 1].Count == 1)
@@ -596,7 +590,7 @@ internal class AICSolver
         discoveredWeakLinksLookup = new SortedSet<int>[NUM_CANDIDATES];
         for (int cand = 0; cand < NUM_CANDIDATES; cand++)
         {
-            discoveredWeakLinksLookup[cand] = new();
+            discoveredWeakLinksLookup[cand] = [];
         }
         foreach (var ((cand0, cand1), chain) in discoveredWeakLinks)
         {
@@ -607,7 +601,7 @@ internal class AICSolver
         discoveredWeakToStrongLinksLookup = new SortedSet<int>[NUM_CANDIDATES];
         for (int cand = 0; cand < NUM_CANDIDATES; cand++)
         {
-            discoveredWeakToStrongLinksLookup[cand] = new();
+            discoveredWeakToStrongLinksLookup[cand] = [];
         }
         foreach (var ((cand0, cand1), chain) in discoveredWeakToStrongLinks)
         {
@@ -684,20 +678,20 @@ internal class AICSolver
             }
         }
 
-        if (canHaveElims && elims != null && elims.Count > 0)
+        if (canHaveElims && elims is { Count: > 0 })
         {
             List<int> chainElims = elims.Where(IsCandIndexValid).ToList();
             if (chainElims.Count > 0)
             {
                 foreach (int elim in chainElims)
                 {
-                    List<List<int>> forcingChains = new();
+                    List<List<int>> forcingChains = [];
                     foreach (int cand0 in srcCandidates)
                     {
                         forcingChains.Add(discoveredWeakLinks[(cand0, elim)]);
                     }
 
-                    if (!CheckBestChain(srcCandidates, new() { elim }, desc, forcingChains))
+                    if (!CheckBestChain(srcCandidates, [elim], desc, forcingChains))
                     {
                         return ApplyBestChain();
                     }
@@ -705,14 +699,14 @@ internal class AICSolver
             }
         }
 
-        if (canHaveTruths && truths != null && truths.Count > 0)
+        if (canHaveTruths && truths is { Count: > 0 })
         {
             List<int> chainTruths = truths.Where(IsCandIndexValid).ToList();
             if (chainTruths.Count > 0)
             {
                 foreach (int truth in chainTruths)
                 {
-                    List<List<int>> forcingChains = new();
+                    List<List<int>> forcingChains = [];
                     foreach (int cand0 in srcCandidates)
                     {
                         forcingChains.Add(discoveredWeakToStrongLinks[(cand0, truth)]);
@@ -748,7 +742,7 @@ internal class AICSolver
     // 6 = 9
     private SortedSet<int> CalcStrongElims(List<int> chain)
     {
-        SortedSet<int> elims = new();
+        SortedSet<int> elims = [];
         for (int chainIndex0 = 0; chainIndex0 < chain.Count; chainIndex0 += 2)
         {
             int cand0 = chain[chainIndex0];
@@ -767,7 +761,7 @@ internal class AICSolver
     // 5 - 0
     private HashSet<int> CalcWeakToStrongElims(List<int> chain)
     {
-        HashSet<int> elims = new();
+        HashSet<int> elims = [];
         for (int chainIndex0 = 1; chainIndex0 < chain.Count; chainIndex0 += 2)
         {
             int cand0 = chain[chainIndex0];
@@ -785,7 +779,7 @@ internal class AICSolver
     // in the ALS must be present.
     private HashSet<int> CalcStrongToWeakElims(Dictionary<int, StrongLinkDesc>[] strongLinks, List<int> chain)
     {
-        HashSet<int> elims = new();
+        HashSet<int> elims = [];
         for (int chainIndex0 = 0; chainIndex0 < chain.Count; chainIndex0 += 2)
         {
             int cand0 = chain[chainIndex0];
@@ -913,13 +907,13 @@ internal class AICSolver
                     .Append(" => ")
                     .Append(solver.DescribeElims(bestChainElims));
 
-                List<LogicalStepDesc> subSteps = new();
+                List<LogicalStepDesc> subSteps = [];
                 foreach (var chain in bestChainForcingChains)
                 {
                     subSteps.Add(new(
                         desc: DescribeChain(chain, false),
                         sourceCandidates: chain,
-                        elimCandidates: Enumerable.Empty<int>(),
+                        elimCandidates: [],
                         sourceIsAIC: true));
                 }
 

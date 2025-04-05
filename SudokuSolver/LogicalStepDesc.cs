@@ -3,18 +3,18 @@
 public class LogicalStepDesc
 {
     public readonly string desc;
-    public readonly List<(int, int)> highlightCells = null;
-    public readonly List<int> sourceCandidates = null;
-    public readonly List<int> elimCandidates = null;
-    public readonly List<(int, int)> strongLinks = null;
-    public readonly List<(int, int)> weakLinks = null;
-    public readonly List<LogicalStepDesc> subSteps = null;
-    public readonly bool isSingle = false;
+    public readonly List<(int, int)> highlightCells;
+    public readonly List<int> sourceCandidates;
+    public readonly List<int> elimCandidates;
+    public readonly List<(int, int)> strongLinks;
+    public readonly List<(int, int)> weakLinks;
+    public readonly List<LogicalStepDesc> subSteps;
+    public readonly bool isSingle;
 
     public LogicalStepDesc(string desc, IEnumerable<int> sourceCandidates, IEnumerable<int> elimCandidates, bool sourceIsAIC = false, bool isSingle = false, List<LogicalStepDesc> subSteps = null)
     {
-        sourceCandidates ??= Enumerable.Empty<int>();
-        elimCandidates ??= Enumerable.Empty<int>();
+        sourceCandidates ??= [];
+        elimCandidates ??= [];
 
         this.desc = desc;
         this.sourceCandidates = sourceCandidates.ToList();
@@ -24,8 +24,8 @@ public class LogicalStepDesc
 
         if (sourceIsAIC)
         {
-            strongLinks = new();
-            weakLinks = new();
+            strongLinks = [];
+            weakLinks = [];
             bool strong = false;
             int prevCandidate = -1;
             foreach (int curCandidate in sourceCandidates)
@@ -57,7 +57,7 @@ public class LogicalStepDesc
     public LogicalStepDesc(string desc, (int, int) highlightCell)
     {
         this.desc = desc;
-        highlightCells = new() { highlightCell };
+        highlightCells = [highlightCell];
     }
 
     public override string ToString()

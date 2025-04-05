@@ -137,7 +137,7 @@ public class ThermometerConstraint : Constraint
                 {
                     if (logicalStepDescription != null)
                     {
-                        elims ??= new();
+                        elims ??= [];
                         for (int v = 1; v <= MAX_VALUE; v++)
                         {
                             if (HasValue(clearMask, v))
@@ -161,7 +161,7 @@ public class ThermometerConstraint : Constraint
                 {
                     if (logicalStepDescription != null)
                     {
-                        elims ??= new();
+                        elims ??= [];
                         for (int v = 1; v <= MAX_VALUE; v++)
                         {
                             if (HasValue(clearMask, v))
@@ -176,7 +176,7 @@ public class ThermometerConstraint : Constraint
             }
         } while (changed);
 
-        if (logicalStepDescription != null && elims != null && elims.Count > 0)
+        if (logicalStepDescription != null && elims is { Count: > 0 })
         {
             logicalStepDescription.Append($"Re-evaluated => {sudokuSolver.DescribeElims(elims)}");
         }
@@ -191,7 +191,7 @@ public class ThermometerConstraint : Constraint
         List<ThermometerConstraint> constraints = new(cells.Count - 1);
         for (int i = 0; i < cells.Count - 1; i++)
         {
-            constraints.Add(new(sudokuSolver, new (int, int)[] { cells[i], cells[i + 1] }));
+            constraints.Add(new(sudokuSolver, [cells[i], cells[i + 1]]));
         }
         return constraints;
     }

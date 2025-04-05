@@ -50,7 +50,7 @@ public static class ConstraintManager
             }
             else
             {
-                solver.customInfo["ConstraintStrings"] = constraintStrings = new();
+                solver.customInfo["ConstraintStrings"] = constraintStrings = [];
             }
 
             if (string.IsNullOrWhiteSpace(options))

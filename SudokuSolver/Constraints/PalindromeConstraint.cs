@@ -100,8 +100,7 @@ public class PalindromeConstraint : Constraint
             return true;
         }
 
-        (int, int) cloneCell;
-        if (cellToClone.TryGetValue((i, j), out cloneCell))
+        if (cellToClone.TryGetValue((i, j), out (int, int) cloneCell))
         {
             uint clearMask = ALL_VALUES_MASK & ~ValueMask(val);
             var clearResult = sudokuSolver.ClearMask(cloneCell.Item1, cloneCell.Item2, clearMask);

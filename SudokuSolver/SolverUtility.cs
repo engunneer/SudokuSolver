@@ -133,7 +133,7 @@ public static class SolverUtility
         }
         else
         {
-            dictionary[key] = new() { value };
+            dictionary[key] = [value];
         }
     }
 

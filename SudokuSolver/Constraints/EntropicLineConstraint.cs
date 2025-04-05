@@ -34,11 +34,11 @@ public class EntropicLineConstraint : Constraint
         // Calculate the three groups
         int smallGroupSize = MAX_VALUE / 3;
         int largeGroupSize = (MAX_VALUE + 2) / 3;
-        int[] groupSizes = MAX_VALUE % 3 == 1 ? new int[3] { smallGroupSize, largeGroupSize, smallGroupSize } : new int[3] { largeGroupSize, smallGroupSize, largeGroupSize };
+        int[] groupSizes = MAX_VALUE % 3 == 1 ? [smallGroupSize, largeGroupSize, smallGroupSize] : [largeGroupSize, smallGroupSize, largeGroupSize];
         int currentValue = 1;
         List<List<int>> groups = groupSizes.Select(groupSize =>
         {
-            List<int> group = new();
+            List<int> group = [];
             for (int i = 0; i < groupSize; i++)
             {
                 group.Add(currentValue++);
@@ -99,7 +99,7 @@ public class EntropicLineConstraint : Constraint
         List<EntropicLineConstraint> constraints = new(cells.Count - 2);
         for (int i = 0; i < cells.Count - 2; i++)
         {
-            List<(int, int)> cellsTriple = new() { cells[i], cells[i + 1], cells[i + 2] };
+            List<(int, int)> cellsTriple = [cells[i], cells[i + 1], cells[i + 2]];
             // Ensure that the lines have consistent order
             if (cellsTriple[0].CompareTo(cellsTriple[2]) > 0)
             {

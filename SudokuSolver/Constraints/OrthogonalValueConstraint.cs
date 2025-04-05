@@ -2,13 +2,13 @@
 
 public abstract class OrthogonalValueConstraint : Constraint
 {
-    private static int numTimes = 0;
+    private static int numTimes;
 
-    public readonly Dictionary<(int, int, int, int), int> markers = new();
-    public readonly bool negativeConstraint = false;
-    public readonly Dictionary<int, uint[]> clearValuesPositiveByMarker = new();
+    public readonly Dictionary<(int, int, int, int), int> markers = [];
+    public readonly bool negativeConstraint;
+    public readonly Dictionary<int, uint[]> clearValuesPositiveByMarker = [];
     public readonly uint[] clearValuesNegative;
-    public readonly HashSet<int> negativeConstraintValues = new();
+    public readonly HashSet<int> negativeConstraintValues = [];
 
     /// <summary>
     /// Determine if the pair of values are allowed to be across the constraint "marker" for a pair of cells.
@@ -28,7 +28,7 @@ public abstract class OrthogonalValueConstraint : Constraint
     /// </summary>
     /// <param name="solver"></param>
     /// <returns>An enumerable of OrthogonalValueConstraint instances which override the negative constraint.</returns>
-    protected virtual IEnumerable<OrthogonalValueConstraint> GetRelatedConstraints(Solver solver) => Enumerable.Empty<OrthogonalValueConstraint>();
+    protected virtual IEnumerable<OrthogonalValueConstraint> GetRelatedConstraints(Solver solver) => [];
 
     public override string GetHash(Solver solver)
     {
@@ -68,9 +68,9 @@ public abstract class OrthogonalValueConstraint : Constraint
     private static readonly Regex sharedRowRegex = new(@"(\d*)r(\d+)[,-](\d+)c(\d+)");
     private static readonly Regex sharedColRegex = new(@"(\d*)r(\d+)c(\d+)[,-](\d+)");
 
-    public OrthogonalValueConstraint(Solver sudokuSolver, string options) : base(sudokuSolver, options)
+    protected OrthogonalValueConstraint(Solver sudokuSolver, string options) : base(sudokuSolver, options)
     {
-        HashSet<int> markerValues = new();
+        HashSet<int> markerValues = [];
         options = options.ToLowerInvariant();
         foreach (string optionGroup in options.Split(separator: ';', options: StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries))
         {
@@ -134,7 +134,7 @@ public abstract class OrthogonalValueConstraint : Constraint
     /// <summary>
     /// Create a single negative constraint by the forbidden value
     /// </summary>
-    public OrthogonalValueConstraint(Solver sudokuSolver, int negativeConstraintValue) : base(sudokuSolver, "neg" + negativeConstraintValue)
+    protected OrthogonalValueConstraint(Solver sudokuSolver, int negativeConstraintValue) : base(sudokuSolver, "neg" + negativeConstraintValue)
     {
         negativeConstraint = true;
         negativeConstraintValues.Add(negativeConstraintValue);
@@ -145,12 +145,12 @@ public abstract class OrthogonalValueConstraint : Constraint
     /// <summary>
     /// Create a single marker constraint by two cells and value
     /// </summary>
-    public OrthogonalValueConstraint(Solver sudokuSolver, int markerValue, (int, int) cell1, (int, int) cell2) : base(sudokuSolver, markerValue + CellName(cell1) + CellName(cell2))
+    protected OrthogonalValueConstraint(Solver sudokuSolver, int markerValue, (int, int) cell1, (int, int) cell2) : base(sudokuSolver, markerValue + CellName(cell1) + CellName(cell2))
     {
         markers.Add(CellPair(cell1, cell2), markerValue);
 
         clearValuesNegative = initClearValuesNegative();
-        initClearValuesPositiveByMarker(new int[] { markerValue });
+        initClearValuesPositiveByMarker([markerValue]);
     }
 
     protected abstract OrthogonalValueConstraint createNegativeConstraint(Solver sudokuSolver, int negativeConstraintValue);
@@ -315,11 +315,11 @@ public abstract class OrthogonalValueConstraint : Constraint
                         // then remove this value as a candidate from cell0.
                         if ((mask0 & valueMask) != 0 && (mask1 & ~clearValuesMask) == 0)
                         {
-                            elims ??= new();
+                            elims ??= [];
                             elims.Add(sudokuSolver.CandidateIndex((i0, j0), v));
                         }
                     }
-                    if (elims != null && elims.Count > 0)
+                    if (elims is { Count: > 0 })
                     {
                         bool invalid = !sudokuSolver.ClearCandidates(elims);
                         logicalStepDescription?.Add(new(
@@ -346,7 +346,7 @@ public abstract class OrthogonalValueConstraint : Constraint
 
                 List<int> elims = null;
                 int maskValueCount = ValueCount(mask);
-                if (maskValueCount > 0 && maskValueCount <= 3)
+                if (maskValueCount is > 0 and <= 3)
                 {
                     // Determine if there are any digits that all the candidates in this cell remove
                     foreach (var cell1 in AdjacentCells(i, j))
@@ -369,12 +369,12 @@ public abstract class OrthogonalValueConstraint : Constraint
 
                         if (clearMask != 0)
                         {
-                            elims ??= new();
+                            elims ??= [];
                             elims.AddRange(sudokuSolver.CandidateIndexes(clearMask, cell1.ToEnumerable()));
                         }
                     }
 
-                    if (elims != null && elims.Count > 0)
+                    if (elims is { Count: > 0 })
                     {
                         bool invalid = !sudokuSolver.ClearCandidates(elims);
                         logicalStepDescription?.Add(new(
@@ -428,7 +428,7 @@ public abstract class OrthogonalValueConstraint : Constraint
                             valInstances[numValInstances++] = pair;
                         }
                     }
-                    if (numValInstances >= 2 && numValInstances <= 5)
+                    if (numValInstances is >= 2 and <= 5)
                     {
                         numTimes++;
 
@@ -484,13 +484,13 @@ public abstract class OrthogonalValueConstraint : Constraint
                                     }
                                     if (allAdjacent && !hasAnyMarker)
                                     {
-                                        elims ??= new();
+                                        elims ??= [];
                                         elims.AddRange(sudokuSolver.CandidateIndexes(clearMask, (i, j).ToEnumerable()));
                                     }
                                 }
                             }
 
-                            if (elims != null && elims.Count > 0)
+                            if (elims is { Count: > 0 })
                             {
                                 bool invalid = !sudokuSolver.ClearCandidates(elims);
                                 logicalStepDescription?.Add(new(
@@ -594,16 +594,16 @@ public abstract class OrthogonalValueConstraint : Constraint
                     {
                         uint mustHaveMask = ValueMask(mustHaveVal);
 
-                        elims ??= new();
+                        elims ??= [];
                         elims.AddRange(sudokuSolver.CandidateIndexes(mustHaveMask, sudokuSolver.SeenCellsByValueMask(mustHaveMask, cellA, cellB)));
                     }
 
-                    if (elims != null && elims.Count > 0)
+                    if (elims is { Count: > 0 })
                     {
                         bool invalid = !sudokuSolver.ClearCandidates(elims);
                         logicalStepDescription?.Add(new(
                             desc: $"{MaskToString(maskA)}{CellName(i, j)} and {MaskToString(maskB)}{CellName(cellB)} are adjacent meaning they must contain {mustHaveVal} => {sudokuSolver.DescribeElims(elims)}",
-                            sourceCandidates: sudokuSolver.CandidateIndexes(ALL_VALUES_MASK, new (int, int)[] { (i, j), cellB }),
+                            sourceCandidates: sudokuSolver.CandidateIndexes(ALL_VALUES_MASK, [(i, j), cellB]),
                             elimCandidates: elims
                         ));
                         return invalid ? LogicResult.Invalid : LogicResult.Changed;

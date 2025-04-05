@@ -221,7 +221,7 @@ public class SumCellsHelper
 
             if (logicResult == LogicResult.Changed)
             {
-                List<int> elims = new();
+                List<int> elims = [];
                 for (int i = 0; i < numCells; i++)
                 {
                     var cell = group.Cells[i];
@@ -258,7 +258,7 @@ public class SumCellsHelper
             int minDof = possibleSumMax - minSum;
             int maxDof = maxSum - possibleSumMin;
 
-            List<int> elims = new();
+            List<int> elims = [];
             foreach (var (group, groupMin, groupMax) in groupMinMax)
             {
                 if (groupMin == groupMax)
@@ -355,7 +355,7 @@ public class SumCellsHelper
     public List<int> PossibleSums(Solver solver)
     {
         int completedSum = 0;
-        List<List<int>> incompleteGroupSums = new();
+        List<List<int>> incompleteGroupSums = [];
         foreach (var curGroup in groups)
         {
             List<int> possibleSums = curGroup.PossibleSums(solver);
@@ -376,13 +376,13 @@ public class SumCellsHelper
 
         if (incompleteGroupSums.Count == 0)
         {
-            return new List<int>() { completedSum };
+            return [completedSum];
         }
 
         // Limit exact results to 5 incomplete groups
         if (incompleteGroupSums.Count <= 5)
         {
-            SortedSet<int> sums = new();
+            SortedSet<int> sums = [];
             foreach (int sum in EnumerateSums(incompleteGroupSums))
             {
                 sums.Add(completedSum + sum);
@@ -411,9 +411,8 @@ public class SumCellsHelper
         if (groupIndex < groups.Count)
         {
             var group = groups[groupIndex];
-            for (int i = 0; i < group.Count; i++)
+            foreach (var sum in group)
             {
-                int sum = group[i];
                 foreach (int subSum in EnumerateSums(groups, groupIndex + 1))
                 {
                     yield return sum + subSum;

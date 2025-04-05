@@ -20,7 +20,7 @@ public class MultiSumKillerCageConstraint : Constraint
         else
         {
             // No sum provided
-            sums = new();
+            sums = [];
         }
 
         var cellGroups = ParseCells(options);

@@ -103,7 +103,7 @@
 
             if (changed && logicalStepDescription != null)
             {
-                List<int> elims = new();
+                List<int> elims = [];
                 for (int cellIndex = 0; cellIndex < cells.Count; cellIndex++)
                 {
                     var (i, j) = cells[cellIndex];
@@ -131,7 +131,7 @@
 
                 logicalStepDescription?.Add(new(
                     desc: $"Restricted to sum{(possibleSums.Count > 1 ? "s" : "")} {string.Join(",", possibleSums)} => {solver.DescribeElims(elims)}",
-                    sourceCandidates: Enumerable.Empty<int>(),
+                    sourceCandidates: [],
                     elimCandidates: elims));
             }
 
@@ -166,7 +166,7 @@
 
             if (possibleSums == null || possibleSums.Count == 0)
             {
-                return new();
+                return [];
             }
 
             List<int> possibleSumsList = possibleSums.ToList();

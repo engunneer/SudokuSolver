@@ -25,7 +25,7 @@
                 return null;
             }
 
-            List<List<(int, int)>> cellGroups = new();
+            List<List<(int, int)>> cellGroups = [];
             for (int i = 0; i < (lineCells.Count + 1) / 2; i++)
             {
                 int index0 = i;

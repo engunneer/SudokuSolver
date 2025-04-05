@@ -264,7 +264,7 @@ public class ArrowTests
         arrow.InitCandidates(solver);
 
         // Was throwing OutOfRangeException
-        arrow.StepLogic(solver, new List<LogicalStepDesc>(), false);
+        arrow.StepLogic(solver, [], false);
     }
 
     [TestMethod]
@@ -356,7 +356,7 @@ public class ArrowTests
 
 
 
-    private void TestLogic(String options, int gridSize, LogicResult expectedResult, String messageContains, Action<Solver> setup, Action<Solver> after = null)
+    private void TestLogic(string options, int gridSize, LogicResult expectedResult, string messageContains, Action<Solver> setup, Action<Solver> after = null)
     {
         var solver = SolverFactory.CreateBlank(gridSize);
         var arrow = WithOptions(options, solver);
@@ -377,8 +377,8 @@ public class ArrowTests
         }
     }
 
-    private ArrowSumConstraint WithOptions(String options, Solver solver = null)
+    private ArrowSumConstraint WithOptions(string options, Solver solver = null)
     {
-        return new ArrowSumConstraint(solver != null ? solver : SolverFactory.CreateBlank(9), options);
+        return new ArrowSumConstraint(solver ?? SolverFactory.CreateBlank(9), options);
     }
 }

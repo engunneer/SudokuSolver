@@ -33,7 +33,7 @@ public class XSumConstraint : Constraint
             throw new ArgumentException($"X-Sum options \"{options}\" has invalid location.");
         }
 
-        cells = new();
+        cells = [];
         if (isRow)
         {
             int i = cellStart.Item1;
@@ -179,7 +179,7 @@ public class XSumConstraint : Constraint
                         {
                             if (HasValue(elimMask, v))
                             {
-                                elims ??= new();
+                                elims ??= [];
                                 elims.Add(CandidateIndex(i, j, v));
                             }
                         }
